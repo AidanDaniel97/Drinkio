@@ -1,13 +1,19 @@
 // Get dependencies
-const express = require('express');
-const path = require('path');
-const http = require('http');
-const bodyParser = require('body-parser');
-
+var express = require('express');
+var path = require('path');
 // Get our API routes
-const api = require('./server/routes/api');
+var api = require('./server/routes/api');
 
-const app = express();
+var app = express();
+
+
+var bodyParser = require('body-parser');
+
+/**
+ * Create HTTP server.
+ */
+var server = require('http').Server(app);
+var io = require('socket.io').listen(server);
 
 // Parsers for POST data
 app.use(bodyParser.json());
@@ -27,15 +33,25 @@ app.get('*', (req, res) => {
 /**
  * Get port from environment and store in Express.
  */
-const port = process.env.PORT || '3000';
+var port = process.env.PORT || '3000';
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
-const server = http.createServer(app);
+
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 server.listen(port, () => console.log(`API running on localhost:${port}`));
+
+
+io.on('connection',function(socket){
+    socket.on('test',function(){
+        console.log('test received');
+    });
+
+    socket.on('createroom',function(){
+      console.log('Room created');
+      io.emit('roomcreated',"test_room_name");
+    })
+
+});
