@@ -3,7 +3,7 @@ var express = require('express');
 var http = require('http').Server(app);
 var io = require('./lib/sockets').listen(http);
 var path = require('path');
-var joinParty = require('./routes/join-party');
+var party = require('./routes/party');
 var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/public", express.static(path.join(__dirname, 'public')));
 
-app.use('/join-party', joinParty);
+app.use('/party', party);
 app.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
 });

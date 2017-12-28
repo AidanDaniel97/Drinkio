@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res) {
-  res.render('join-party', { title: 'Express' });
+router.get('/:partyid', function(req, res) {
+  res.render('party', { title: 'Express' , partyid: req.params.partyid });
 });
 
 

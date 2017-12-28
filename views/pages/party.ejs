@@ -1,0 +1,48 @@
+<html>
+  <head>
+      <% include ../partials/head %>
+  </head>
+  <body>
+
+      <h1> Party ID: <span id="partyid"><%= partyid %></span> </h1>
+       <ul id="messages"></ul>
+       <form action="">
+         <input id="m" autocomplete="off" /><button>Send</button>
+       </form>
+
+       <script>
+
+         var socket = io();
+         var url = window.location.pathname;
+
+         function join_party(){
+           //Split url, emit only the party id
+           var url_parts = url.replace(/\/\s*$/,'').split('/');
+           url_parts.shift();
+           socket.emit('join_party', url_parts[1]);
+         }
+
+
+
+
+         $('form').submit(function(){
+           var message = {"msg":$('#m').val() , "partyid": $('#partyid').html()};
+           socket.emit('chat message', message );
+           console.log(message)
+           $('#m').val('');
+           return false;
+         });
+         socket.on('chat message', function(msg){
+           $('#messages').append($('<li>').text(msg));
+         });
+
+
+        join_party();
+
+       </script>
+
+
+
+
+  </body>
+</html>
