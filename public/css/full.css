@@ -5,7 +5,7 @@
  */
 
 #home-menu {
-  background: url('http://placehold.it/1920x1080') no-repeat center center fixed;
+  background: url('http://www.rockingwallpapers.com/wp-content/uploads/2013/11/I-love-to-party-wallpaper.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
@@ -17,12 +17,18 @@
   margin-bottom:175px;
 }
 
-#home-menu button{
+#home-menu .menu-buttons{
   width: 100%;
   padding: 20px;
   margin-bottom: 31px;
 }
 
+
+.btn-primary{
+  color:black;
+  background-color:transparent;
+  border:2px solid white;
+}
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font: 13px Helvetica, Arial; }
@@ -32,3 +38,16 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #messages { list-style-type: none; margin: 0; padding: 0; }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
+
+
+.flashit{
+  background-color:red;
+	-webkit-animation: flash linear 1s infinite;
+	animation: flash linear 1s infinite;
+}
+
+@-webkit-keyframes flash {
+	0% { background-color: red; }
+	50% { background-color: white; }
+	100% { background-color: red; }
+}

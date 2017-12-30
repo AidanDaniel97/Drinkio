@@ -22,7 +22,9 @@
            socket.emit('join_party', url_parts[1]);
          }
 
-
+        socket.on('flash',function(){
+          $('body').addClass("flashit");
+        });
 
 
          $('form').submit(function(){
