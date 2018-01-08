@@ -26,6 +26,10 @@
           $('body').addClass("flashit");
         });
 
+        socket.on('players',function(value){
+          console.log(value)
+        });
+
 
          $('form').submit(function(){
            var message = {"msg":$('#m').val() , "partyid": $('#partyid').html()};
