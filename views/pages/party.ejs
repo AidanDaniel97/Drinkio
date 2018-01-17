@@ -17,7 +17,7 @@
                <h4 class="modal-title">Please Enter a username</h4>
              </div>
              <div class="modal-body">
-               <input v-model="partyName" placeholder="username">
+               <input v-model="playerName" placeholder="username">
              </div>
              <div class="modal-footer">
                  <button type="button" v-on:click="join_party" class="btn btn-default">Confirm</button>
@@ -65,12 +65,11 @@
 
                  methods: {
                    join_party: function(url){
-                     console.log("yes")
                      $('#usernameModal').modal('hide');
-                     //Split url, emit only the party id
-                     var url_parts = this.url.replace(/\/\s*$/,'').split('/');
-                     url_parts.shift();
-                     socket.emit('join_party', url_parts[1]);
+                     // //Split url, emit only the party id
+                     // var url_parts = this.url.replace(/\/\s*$/,'').split('/');
+                     // url_parts.shift();
+                     socket.emit('connected_to_party');
                    },
 
                    send_message: function(){

@@ -36,9 +36,7 @@
              <input v-model="partyName" placeholder="edit me">
            </div>
            <div class="modal-footer">
-             <a v-bind:href="'/party/' + cleanRoomName(partyName)">
-               <button type="button" class="btn btn-default">{{ modalType }} Party</button>
-            </a>
+              <button type="button" v-on:click="enterParty()" class="btn btn-default">{{ modalType }} Party</button>
            </div>
          </div>
        </div>
@@ -46,9 +44,24 @@
 
 
   </div> <!--End of vue app-->
- 
+
 
     <script>
+    var socket = io();
+
+
+    socket.on("error_message",function(error_message){
+      console.log("Error" , error_message);
+    })
+
+    socket.on("created_party",function(success){
+      window.location.href = "/party/"+app.partyName;
+    });
+    socket.on("joined_party",function(success){
+      window.location.href = "/party/"+app.partyName;
+    });
+
+
 
     var app = new Vue({
       el: '#app',
@@ -62,6 +75,14 @@
           //Remove special characters
           partyName = partyName.replace(/[^a-zA-Z ]/g, "").replace(/\s/g, '');;
           return partyName;
+        },
+        enterParty: function(){
+          //'/party/' + cleanRoomName(partyName)
+          if(this.modalType == "join"){//Join a party with a code
+            socket.emit("join_party",this.partyName);
+          }else{//create a party with a name
+            socket.emit("create_party",this.partyName);
+          }
         }
       }
     })
