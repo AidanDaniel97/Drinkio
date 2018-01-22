@@ -6,7 +6,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
   this.in_chat = false
   this.players = {}
   this.io = io
-  this.uniqueCode = ''
+  this.uniqueCode = uniqueCode
 
   // true,debate_room_id,debate_name,debate_side)
   this.addPlayerToRoom = function (socketId) {
@@ -18,25 +18,25 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
   /** *******************
            CHAT
     *********************/
-  this.chatMessage = function chatMessage (message, socket) {
-    console.log('Recieved message ', message)
+  this.chatMessage = function chatMessage (msg, socket) {
+    console.log('Recieved msgeee ', msg, this.uniqueCode)
 
     // commands
-    var command = message.split(' ')
+    var command = msg.split(' ')
 
-    if (message === '/flash') {
-      io.sockets.in(this.uniqueCode).emit('flash', message)
-    } else if (message === '/players') {
-      io.sockets.in(this.uniqueCode).emit('players', this.players)
+    if (msg === '/flash') {
+      io.in(this.uniqueCode).emit('flash', msg)
+    } else if (msg === '/players') {
+      io.in(this.uniqueCode).emit('players', this.players)
     } else if (command[0].toLowerCase() === '/name') {
       var name = command[1]
       this.players[socket.id].setPlayerName(name)
     } else {
-      message = {
-        'message': message.message,
+      var message = {
+        'message': msg,
         'playername': this.players[socket.id].playerName
       }
-      io.sockets.in(this.uniqueCode).emit('chat_message', message)
+      io.in(this.uniqueCode).emit('chat_message', message)
     }
   }
 

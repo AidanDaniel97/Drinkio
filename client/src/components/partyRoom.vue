@@ -1,7 +1,11 @@
 <template>
     <div class="">
       <h1> Party ID: <span id="partyid">XXXX</span> </h1>
-       <ul id="messages"></ul>
+       <ul id="messages">
+         <li v-for='(message, index) in messages' :key='index'>
+            <p>{{ message.playerName }}: {{ message.message }}</p>
+          </li>
+       </ul>
        <form action="" v-on:submit.prevent="send_message">
          <input autocomplete="off" v-model="chatMessage" id="message" /><button>Send</button>
        </form>
@@ -20,12 +24,14 @@ export default {
   data () {
     return {
       title: 'test title for party room',
-      chatMessage: ''
+      chatMessage: '',
+      messages: []
     }
   },
   sockets: {
     chat_message: function (message) {
-      console.log('chat recieved ' , message)
+      console.log('chat recieved ', message)
+      this.messages.push({ playerName: message.playername, message: message.message })
     }
   },
   methods: {

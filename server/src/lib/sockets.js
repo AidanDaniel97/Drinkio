@@ -26,12 +26,13 @@ module.exports.listen = function (app) {
       console.log(io.sockets.adapter.rooms[partyid], partyid)
       if (io.sockets.adapter.rooms[partyid]) {
         // This room already exists  - JOIN it
-
         //* **
         // Add a thing here to check for passwords blah blah blah
         //* ***
 
         socket.join(partyid)
+        //  set the user's current room
+        playerList[socket.id].currentRoomId = partyid
         // Get the room data
         var roomData = io.sockets.adapter.rooms[partyid].roomData
         // Add this user to the chat's player list
@@ -69,8 +70,6 @@ module.exports.listen = function (app) {
       console.log('SUCCESS, room created with id ' + partyid)
 
       socket.emit('created_party')
-
-      // socket.join(partyname)
     })
 
     socket.on('connected_to_party', function (msg) {
