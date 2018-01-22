@@ -1,6 +1,7 @@
 <template>
     <div class="">
-      <h1> Party ID: <span id="partyid">XXXX</span> </h1>
+      <h1>{{ partyName }}</h1>
+      <p>Join code: {{ roomCode }}</p>
        <ul id="messages">
          <li v-for='(message, index) in messages' :key='index'>
             <p>{{ message.playerName }}: {{ message.message }}</p>
@@ -27,6 +28,12 @@ export default {
       chatMessage: '',
       messages: []
     }
+  },
+  props: {
+    // eslint-disable-next-line
+    partyName: app.partyName,
+    // eslint-disable-next-line
+    roomCode: app.roomCode
   },
   sockets: {
     chat_message: function (message) {

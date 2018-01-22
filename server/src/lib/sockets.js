@@ -37,16 +37,14 @@ module.exports.listen = function (app) {
         var roomData = io.sockets.adapter.rooms[partyid].roomData
         // Add this user to the chat's player list
         roomData.addPlayerToRoom(socket.id)
-        socket.emit('joined_party')
+        socket.emit('joined_party', {'partyName': roomData.roomName, 'roomCode': playerList[socket.id].currentRoomId})
       } else {
         // Room doesnt exist
         socket.emit('response', {'status': 'error', 'message': error['1000']})
       }
     })
 
-    socket.on('create_party', function (partyname) {
-      console.log(io.sockets.adapter.rooms[partyname])
-
+    socket.on('create_party', function (partyName) {
       // Generate unique room code
       var partyid = codegen.generateCode(5, 'aA')
       // Join the room using a unique code
@@ -59,17 +57,14 @@ module.exports.listen = function (app) {
       // if(!roomList[partyid]){
       //* **********************
       // Set room up with a data object - pass the room name (party id) and socket
-      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyname, io, partyid)
+      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, partyid)
       var roomData = io.sockets.adapter.rooms[partyid].roomData
       roomData.addPlayerToRoom(socket.id)
       // set the player's current room
       playerList[socket.id].currentRoomId = partyid
-      console.log('test ', playerList[socket.id])
-      playerList[socket.id].currentRoomName = partyname
+      playerList[socket.id].currentRoomName = partyName
 
-      console.log('SUCCESS, room created with id ' + partyid)
-
-      socket.emit('created_party')
+      socket.emit('created_party', {'partyName': partyName, 'roomCode': partyid})
     })
 
     socket.on('connected_to_party', function (msg) {

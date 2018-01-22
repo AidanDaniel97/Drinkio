@@ -16,7 +16,7 @@
         <h3 slot="header">Create Room</h3>
         <p slot="body">
           Enter the name of the room you wish to create:
-          <input v-model="roomName" type="text" placeholder="Room Name" name="" value="">
+          <input v-model="partyName" type="text" placeholder="Room Name" name="" value="">
         </p>
         <div slot="footer">
           <button class="modal-default-button" v-on:click="enterParty('create')">
@@ -56,7 +56,7 @@ export default {
       showJoinModal: false,
       showCreateModal: false,
       roomCode: '',
-      roomName: ''
+      partyName: ''
     }
   },
   methods: {
@@ -64,7 +64,7 @@ export default {
       if (event === 'join') {
         this.$emit('enterParty', {'event': 'join', 'roomCode': this.roomCode})
       } else {
-        this.$emit('enterParty', {'event': 'create', 'roomName': this.roomName})
+        this.$emit('enterParty', {'event': 'create', 'partyName': this.partyName})
       }
     }
   }
