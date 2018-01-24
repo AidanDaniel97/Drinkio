@@ -31,13 +31,19 @@ module.exports.listen = function (app) {
         //* ***
 
         socket.join(partyid)
-        //  set the user's current room
-        playerList[socket.id].currentRoomId = partyid
         // Get the room data
         var roomData = io.sockets.adapter.rooms[partyid].roomData
         // Add this user to the chat's player list
         roomData.addPlayerToRoom(socket.id)
+
+        //  set the user's current room
+        playerList[socket.id].currentRoomId = partyid
+        playerList[socket.id].currentRoomName = roomData.roomName
+
+        // set the player's current room
         socket.emit('joined_party', {'partyName': roomData.roomName, 'roomCode': playerList[socket.id].currentRoomId})
+        //  Check if everyone is now ready
+        roomData.checkPlayersReady(socket)
       } else {
         // Room doesnt exist
         socket.emit('response', {'status': 'error', 'message': error['1000']})
@@ -57,7 +63,7 @@ module.exports.listen = function (app) {
       // if(!roomList[partyid]){
       //* **********************
       // Set room up with a data object - pass the room name (party id) and socket
-      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, partyid)
+      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, socket, partyid)
       var roomData = io.sockets.adapter.rooms[partyid].roomData
       roomData.addPlayerToRoom(socket.id)
       // set the player's current room
@@ -65,12 +71,9 @@ module.exports.listen = function (app) {
       playerList[socket.id].currentRoomName = partyName
 
       socket.emit('created_party', {'partyName': partyName, 'roomCode': partyid})
+      //  Check if everyone is now ready
+      roomData.checkPlayersReady(socket)
     })
-
-    socket.on('connected_to_party', function (msg) {
-      console.log(playerList[socket.id])
-    })
-
     // Send message to room object
     socket.on('chat_message', function (message) {
       var partyid = playerList[socket.id].currentRoomId
@@ -78,7 +81,11 @@ module.exports.listen = function (app) {
       // Pass the room object the message and the socket it was from
       roomList[partyid].roomData.chatMessage(message, socket)
     })
-  })
 
+    socket.on('player_ready', function () {
+      console.log('Player is ready')
+      playerList[socket.id].setPlayerReady(true)
+    })
+  })
   return io
 }

@@ -100,14 +100,14 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #messages li:nth-child(odd) { background: #eee; }
 
 
-.flashit{
-  background-color:red;
+.flash{
+  color:red;
 	-webkit-animation: flash linear 1s infinite;
 	animation: flash linear 1s infinite;
 }
 
 @-webkit-keyframes flash {
-	0% { background-color: red; }
-	50% { background-color: white; }
-	100% { background-color: red; }
+	0% { color: red; }
+	50% { color: white; }
+	100% { color: red; }
 }

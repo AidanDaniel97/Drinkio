@@ -1,10 +1,3 @@
-<!-- <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-  </div>
-</template> -->
-
 <template>
   <div id="app">
     <mainMenu @enterParty="enterParty" v-if="showMainMenu"></mainMenu>

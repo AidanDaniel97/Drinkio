@@ -7,6 +7,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
   this.players = {}
   this.io = io
   this.uniqueCode = uniqueCode
+  this.playersReady = false
 
   // true,debate_room_id,debate_name,debate_side)
   this.addPlayerToRoom = function (socketId) {
@@ -19,8 +20,6 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
            CHAT
     *********************/
   this.chatMessage = function chatMessage (msg, socket) {
-    console.log('Recieved msgeee ', msg, this.uniqueCode)
-
     // commands
     var command = msg.split(' ')
 
@@ -41,9 +40,10 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
   }
 
   /*
-     DEBUGGING
-    */
-  this.logtest = function () {
-    console.log('test: ' + this.roomName)
+  Game Logic
+  */
+  this.checkPlayersReady = function checkPlayersReady () {
+    console.log('send ready check')
+    io.in(this.uniqueCode).emit('ready_check')
   }
 }

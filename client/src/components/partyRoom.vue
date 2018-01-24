@@ -1,6 +1,6 @@
 <template>
     <div class="">
-      <h1>{{ partyName }}</h1>
+      <h1 v-bind:class="{ flash: flashing }">{{ partyName }}</h1>
       <p>Join code: {{ roomCode }}</p>
        <ul id="messages">
          <li v-for='(message, index) in messages' :key='index'>
@@ -26,7 +26,8 @@ export default {
     return {
       title: 'test title for party room',
       chatMessage: '',
-      messages: []
+      messages: [],
+      flashing: false
     }
   },
   props: {
@@ -39,6 +40,15 @@ export default {
     chat_message: function (message) {
       console.log('chat recieved ', message)
       this.messages.push({ playerName: message.playername, message: message.message })
+    },
+    flash: function () {
+      this.flashing = true
+    },
+    players: function (value) {
+      console.log(value)
+    },
+    ready_check: function (value) {
+      console.log('player ready check')
     }
   },
   methods: {

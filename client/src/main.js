@@ -10,7 +10,7 @@ require('../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss')
 const css = require('./scss/main.scss')
 import VueSocketio from 'vue-socket.io'
 
-Vue.use(VueSocketio, 'http://localhost:8000')
+Vue.use(VueSocketio, '192.168.1.243:8000')
 // Components
 Vue.component('mainMenu', mainMenu)
 Vue.component('partyRoom', partyRoom)
