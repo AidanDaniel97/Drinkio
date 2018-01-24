@@ -83,7 +83,7 @@ module.exports.listen = function (app) {
 
     socket.on('player_ready', function () {
       console.log('Player is ready')
-      playerList[socket.id].setPlayerReady(true)
+      //Set the player to ready
     })
   })
   return io

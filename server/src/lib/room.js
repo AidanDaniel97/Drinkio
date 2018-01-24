@@ -21,7 +21,6 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
     *********************/
   this.chatMessage = function chatMessage (msg, socket) {
     // commands
-    console.log('recieved.... ', this.uniqueCode)
     var command = msg.split(' ')
 
     if (msg === '/flash') {

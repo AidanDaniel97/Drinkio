@@ -38,7 +38,6 @@ export default {
   },
   sockets: {
     chat_message: function (message) {
-      console.log('chat recieved ', message)
       this.messages.push({ playerName: message.playername, message: message.message })
     },
     flash: function () {
@@ -49,6 +48,9 @@ export default {
     },
     ready_check: function (value) {
       console.log('player ready check')
+      //  send back ready
+      this.$socket.emit('player_ready', true)
+
     }
   },
   methods: {
