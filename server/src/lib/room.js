@@ -21,6 +21,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
     *********************/
   this.chatMessage = function chatMessage (msg, socket) {
     // commands
+    console.log('recieved.... ', this.uniqueCode)
     var command = msg.split(' ')
 
     if (msg === '/flash') {
@@ -43,7 +44,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
   Game Logic
   */
   this.checkPlayersReady = function checkPlayersReady () {
-    console.log('send ready check')
+    console.log('send ready')
     io.in(this.uniqueCode).emit('ready_check')
   }
 }
