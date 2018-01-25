@@ -1,13 +1,15 @@
 //  var socketio = require('socket.io')
 var Player = require('./player.js')
+var availableRounds = require('./available_rounds')
 
-module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
+module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList) {
   this.roomName = roomName
   this.in_chat = false
-  this.players = {}
+  this.players = playerList
   this.io = io
   this.uniqueCode = uniqueCode
   this.playersReady = false
+  this.availableRounds = availableRounds
 
   // true,debate_room_id,debate_name,debate_side)
   this.addPlayerToRoom = function (socketId) {
@@ -42,8 +44,15 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode) {
   /*
   Game Logic
   */
+  this.sendPlayerReadyCheck = function sendPlayerReadyCheck (socket) {
+    console.log('send ready check...')
+    socket.emit('ready_check')
+  }
+
   this.checkPlayersReady = function checkPlayersReady () {
-    console.log('send ready')
-    io.in(this.uniqueCode).emit('ready_check')
+    // var playersReady = false
+    for (var player in this.players) {
+      console.log(this.players[player], this.players.length)
+    }
   }
 }

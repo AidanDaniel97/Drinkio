@@ -50,7 +50,6 @@ export default {
       console.log('player ready check')
       //  send back ready
       this.$socket.emit('player_ready', true)
-
     }
   },
   methods: {

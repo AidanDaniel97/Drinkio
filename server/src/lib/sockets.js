@@ -63,7 +63,7 @@ module.exports.listen = function (app) {
       // if(!roomList[partyid]){
       //* **********************
       // Set room up with a data object - pass the room name (party id) and socket
-      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, partyid)
+      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, partyid, playerList)
       var roomData = io.sockets.adapter.rooms[partyid].roomData
       roomData.addPlayerToRoom(socket.id)
       // set the player's current room
@@ -71,8 +71,8 @@ module.exports.listen = function (app) {
       playerList[socket.id].currentRoomName = partyName
 
       socket.emit('created_party', {'partyName': partyName, 'roomCode': partyid})
-      //  Check if everyone is now ready
-      roomData.checkPlayersReady(socket)
+      //  on connect, send them a ready check
+      roomData.sendPlayerReadyCheck(socket)
     })
     // Send message to room object
     socket.on('chat_message', function (message) {
@@ -81,9 +81,14 @@ module.exports.listen = function (app) {
       roomList[partyid].roomData.chatMessage(message, socket)
     })
 
+    //  A player in a room has said they are ready
     socket.on('player_ready', function () {
       console.log('Player is ready')
-      //Set the player to ready
+      var player = playerList[socket.id]
+      //  Set the player to ready
+      player.playerReady = true
+      //  Check if all players in the room are ready
+      roomList[player.currentRoomId].roomData.checkPlayersReady()
     })
   })
   return io
