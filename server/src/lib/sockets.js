@@ -83,7 +83,6 @@ module.exports.listen = function (app) {
 
     //  A player in a room has said they are ready
     socket.on('player_ready', function () {
-      console.log('Player is ready')
       var player = playerList[socket.id]
       //  Set the player to ready
       player.playerReady = true

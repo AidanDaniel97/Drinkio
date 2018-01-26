@@ -1,5 +1,7 @@
 <template>
     <div class="">
+
+      <button type="button" v-on:click="sendPlayerReady" name="button">I am ready</button>
       <h1 v-bind:class="{ flash: flashing }">{{ partyName }}</h1>
       <p>Join code: {{ roomCode }}</p>
        <ul id="messages">
@@ -49,7 +51,7 @@ export default {
     ready_check: function (value) {
       console.log('player ready check')
       //  send back ready
-      this.$socket.emit('player_ready', true)
+      // this.$socket.emit('player_ready', true)
     }
   },
   methods: {
@@ -59,6 +61,9 @@ export default {
       this.$socket.emit('chat_message', message)
       this.chatMessage = ''
       return false
+    },
+    sendPlayerReady () {
+      this.$socket.emit('player_ready', true)
     }
   }
 }

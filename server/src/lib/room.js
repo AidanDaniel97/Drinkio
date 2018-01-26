@@ -1,4 +1,5 @@
 //  var socketio = require('socket.io')
+/*eslint-disable */
 var Player = require('./player.js')
 var availableRounds = require('./available_rounds')
 
@@ -50,9 +51,22 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
   }
 
   this.checkPlayersReady = function checkPlayersReady () {
-    // var playersReady = false
+    var playersReady = ''
     for (var player in this.players) {
-      console.log(this.players[player], this.players.length)
+      if (this.players[player].playerReady) {
+        console.log('This player is ready')
+        playersReady = true
+      } else {
+        console.log('Player ready: ', this.players[player].playerReady)
+        playersReady = false
+        return false
+      }
+    }
+
+    if (playersReady){
+      console.log('All players are ready')
+    }else{
+      console.log('not all players are ready')
     }
   }
 }
