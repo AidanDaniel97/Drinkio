@@ -1,6 +1,8 @@
 //  var socketio = require('socket.io')
 /*eslint-disable */
 var Player = require('./player.js')
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
 var availableRounds = require('./available_rounds')
 
 module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList) {
@@ -11,6 +13,8 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
   this.uniqueCode = uniqueCode
   this.playersReady = false
   this.availableRounds = availableRounds
+  this.playerMin = 1 //SET THIS BACK TO 2 for the REAL GAME
+  this.gameLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
   this.addPlayerToRoom = function (socketId) {
@@ -50,6 +54,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
     socket.emit('ready_check')
   }
 
+
   this.checkPlayersReady = function checkPlayersReady () {
     var playersReady = ''
     for (var player in this.players) {
@@ -63,10 +68,24 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
       }
     }
 
+    //All players ready and there is more or equal players than the minumum
     if (playersReady){
-      console.log('All players are ready')
+      if(Object.keys(this.players).length >= this.playerMin){
+          eventEmitter.emit('begin_game');
+      }else{
+        console.log("Players ready, waiting for " + (this.playerMin - Object.keys(this.players).length) +" more players")
+      }
     }else{
       console.log('not all players are ready')
     }
   }
+
+
+
+  var beginGame = function () {
+    this.gameLocked = true
+    console.log('Beginning game...');
+  }
+  eventEmitter.on('begin_game', beginGame);
+
 }
