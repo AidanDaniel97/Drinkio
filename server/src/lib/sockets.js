@@ -81,13 +81,16 @@ module.exports.listen = function (app) {
       roomList[partyid].roomData.chatMessage(message, socket)
     })
 
-    //  A player in a room has said they are ready
-    socket.on('player_ready', function () {
+    //  A player in a room has said they are ready and passed their name
+    socket.on('player_ready', function (playerName) {
       var player = playerList[socket.id]
       //  Set the player to ready
       player.playerReady = true
+      player.playerName = playerName
       //  Check if all players in the room are ready
-      roomList[player.currentRoomId].roomData.checkPlayersReady()
+      setTimeout(function () {
+        roomList[player.currentRoomId].roomData.checkPlayersReady()
+      }, 1000)
     })
   })
   return io

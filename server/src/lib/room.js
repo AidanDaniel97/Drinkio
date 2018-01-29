@@ -1,14 +1,16 @@
 //  var socketio = require('socket.io')
 /*eslint-disable */
 var Player = require('./player.js')
-var events = require('events');
-var eventEmitter = new events.EventEmitter();
 var availableRounds = require('./available_rounds')
+var straightFace = require('./rounds/straight_face')
+var dirtyPint = require('./rounds/dirty_pint')
 
 module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList) {
   this.roomName = roomName
   this.in_chat = false
   this.players = playerList
+  this.currentPlayer = null
+  this.currentRound = null
   this.io = io
   this.uniqueCode = uniqueCode
   this.playersReady = false
@@ -47,7 +49,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
   }
 
   /*
-  Game Logic
+  Room Logic
   */
   this.sendPlayerReadyCheck = function sendPlayerReadyCheck (socket) {
     console.log('send ready check...')
@@ -62,7 +64,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
         console.log('This player is ready')
         playersReady = true
       } else {
-        console.log('Player ready: ', this.players[player].playerReady)
+        console.log('Player is not ready: ', this.players[player].playerReady, this.players[player])
         playersReady = false
         return false
       }
@@ -71,7 +73,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
     //All players ready and there is more or equal players than the minumum
     if (playersReady){
       if(Object.keys(this.players).length >= this.playerMin){
-          eventEmitter.emit('begin_game');
+          this.beginGame()
       }else{
         console.log("Players ready, waiting for " + (this.playerMin - Object.keys(this.players).length) +" more players")
       }
@@ -81,11 +83,36 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
   }
 
 
+  this.startRound = function startRound(round){
+    // if (!this.currentPlayer){
+    //   this.currentPlayer = this.players[0]
+    //   console.log(this.currentPlayer)
+    // }
+    switch (round) {
+        case 'dirty_pint':
+            console.log('Dirty pint!');
+            this.currentRound = new dirtyPint.NewRound()
+            this.currentRound.startRound()
+            break;
+        case 'straight_face':
+            console.log('Straight Face!');
+            this.currentRound = new straightFace.NewRound()
+            this.currentRound.startRound()
+            break;
+    }
+  }
 
-  var beginGame = function () {
+
+  this.beginGame = function beginGame () {
     this.gameLocked = true
     console.log('Beginning game...');
+    //  Select the first person to go
+    var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length);
+    console.log('Random player: ', this.players[randomPlayer])
+    //Select a starting game mode
+    var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length);
+    this.startRound(availableRounds[randomRound])
   }
-  eventEmitter.on('begin_game', beginGame);
+
 
 }

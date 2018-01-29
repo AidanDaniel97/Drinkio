@@ -1,7 +1,5 @@
 <template>
     <div class="">
-
-      <button type="button" v-on:click="sendPlayerReady" name="button">I am ready</button>
       <h1 v-bind:class="{ flash: flashing }">{{ partyName }}</h1>
       <p>Join code: {{ roomCode }}</p>
        <ul id="messages">
@@ -12,6 +10,18 @@
        <form action="" v-on:submit.prevent="send_message">
          <input autocomplete="off" v-model="chatMessage" id="message" /><button>Send</button>
        </form>
+
+       <modal v-if="showNameModal">
+         <h3 slot="header">Enter your name</h3>
+         <p slot="body">
+           <input v-model="playerName" type="text" placeholder="Name" name="" value="">
+         </p>
+         <div slot="footer">
+           <button class="modal-default-button" v-on:click="sendPlayerReady">
+             Continue
+           </button>
+         </div>
+       </modal>
     </div>
 </template>
 
@@ -26,10 +36,11 @@ export default {
   },
   data () {
     return {
-      title: 'test title for party room',
       chatMessage: '',
       messages: [],
-      flashing: false
+      flashing: false,
+      showNameModal: true,
+      playerName: ''
     }
   },
   props: {
@@ -63,7 +74,8 @@ export default {
       return false
     },
     sendPlayerReady () {
-      this.$socket.emit('player_ready', true)
+      this.showNameModal = false
+      this.$socket.emit('player_ready', this.playerName)
     }
   }
 }
