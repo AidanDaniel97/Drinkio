@@ -90,7 +90,7 @@ module.exports.listen = function (app) {
       //  Check if all players in the room are ready
       setTimeout(function () {
         roomList[player.currentRoomId].roomData.checkPlayersReady()
-      }, 1000)
+      }, 500)
     })
   })
   return io

@@ -64,7 +64,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
         console.log('This player is ready')
         playersReady = true
       } else {
-        console.log('Player is not ready: ', this.players[player].playerReady, this.players[player])
+        console.log('Player is not ready: ', this.players[player].player.playerReady, this.players[player])
         playersReady = false
         return false
       }
@@ -108,7 +108,9 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
     console.log('Beginning game...');
     //  Select the first person to go
     var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length);
-    console.log('Random player: ', this.players[randomPlayer])
+    console.log('Random player: ', this.players[randomPlayer], this.players)
+    io.emit('log_this', this.players)
+    this.currentPlayer = this.players[randomPlayer]
     //Select a starting game mode
     var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length);
     this.startRound(availableRounds[randomRound])
