@@ -16,7 +16,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
   this.uniqueCode = uniqueCode
   this.playersReady = false
   this.availableRounds = availableRounds
-  this.playerMin = 1 //SET THIS BACK TO 2 for the REAL GAME
+  this.playerMin = 2 //SET THIS BACK TO 2 for the REAL GAME
   this.roomLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
@@ -98,11 +98,11 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
 
 
   this.startRound = function startRound(round){
-    //If there is not a current player for this round
-    if (!this.currentPlayer){
-      this.currentPlayer = Object.keys(this.players)[0]
-      console.log(this.currentPlayer)
-    }
+    // //If there is not a current player for this round
+    // if (!this.currentPlayer){
+    //   this.currentPlayer = Object.keys(this.players)[0]
+    //   console.log(this.currentPlayer)
+    // }
     switch (round) {
         case 'dirty_pint':
             console.log('Dirty pint!');
@@ -125,7 +125,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
     var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length);
     console.log('Random player: ', this.players[randomPlayer], this.players)
     this.io.emit('log_this', this.players)
-    this.currentPlayer = this.players[randomPlayer]
+    this.currentPlayer = Object.keys(this.players)[randomPlayer]
     //Select a starting game mode
     var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length);
     this.startRound(availableRounds[randomRound])
