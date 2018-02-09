@@ -63,7 +63,7 @@ module.exports.listen = function (app) {
       // if(!roomList[partyid]){
       //* **********************
       // Set room up with a data object - pass the room name (party id) and socket
-      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, partyid, playerList)
+      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, partyid, playerList, socket)
       var roomData = io.sockets.adapter.rooms[partyid].roomData
       roomData.addPlayerToRoom(socket.id)
       // set the player's current room

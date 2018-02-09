@@ -5,17 +5,18 @@ var availableRounds = require('./available_rounds')
 var straightFace = require('./rounds/straight_face')
 var dirtyPint = require('./rounds/dirty_pint')
 
-module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList) {
+module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList,socket) {
   this.roomName = roomName
   this.in_chat = false
   this.players = playerList
   this.currentPlayer = null
   this.currentRound = null
   this.io = io
+  this.socket = socket
   this.uniqueCode = uniqueCode
   this.playersReady = false
   this.availableRounds = availableRounds
-  this.playerMin = 1 //SET THIS BACK TO 2 for the REAL GAME
+  this.playerMin = 2 //SET THIS BACK TO 2 for the REAL GAME
   this.gameLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
@@ -33,9 +34,9 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
     var command = msg.split(' ')
 
     if (msg === '/flash') {
-      io.in(this.uniqueCode).emit('flash', msg)
+      this.io.in(this.uniqueCode).emit('flash', msg)
     } else if (msg === '/players') {
-      io.in(this.uniqueCode).emit('players', this.players)
+      this.io.in(this.uniqueCode).emit('players', this.players)
     } else if (command[0].toLowerCase() === '/name') {
       var name = command[1]
       this.players[socket.id].setPlayerName(name)
@@ -44,7 +45,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
         'message': msg,
         'playername': this.players[socket.id].playerName
       }
-      io.in(this.uniqueCode).emit('chat_message', message)
+      this.io.in(this.uniqueCode).emit('chat_message', message)
     }
   }
 
@@ -64,7 +65,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
         console.log('This player is ready')
         playersReady = true
       } else {
-        console.log('Player is not ready: ', this.players[player].player.playerReady, this.players[player])
+        console.log('Player is not ready: ', this.players[player].playerReady, this.players[player])
         playersReady = false
         return false
       }
@@ -84,19 +85,20 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
 
 
   this.startRound = function startRound(round){
-    // if (!this.currentPlayer){
-    //   this.currentPlayer = this.players[0]
-    //   console.log(this.currentPlayer)
-    // }
+    //If there is not a current player for this round
+    if (!this.currentPlayer){
+      this.currentPlayer = Object.keys(this.players)[0]
+      console.log(this.currentPlayer)
+    }
     switch (round) {
         case 'dirty_pint':
             console.log('Dirty pint!');
-            this.currentRound = new dirtyPint.NewRound()
+            this.currentRound = new dirtyPint.NewRound(this.currentPlayer)
             this.currentRound.startRound()
             break;
         case 'straight_face':
             console.log('Straight Face!');
-            this.currentRound = new straightFace.NewRound()
+            this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this.io, this.socket)
             this.currentRound.startRound()
             break;
     }
@@ -109,7 +111,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList)
     //  Select the first person to go
     var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length);
     console.log('Random player: ', this.players[randomPlayer], this.players)
-    io.emit('log_this', this.players)
+    this.io.emit('log_this', this.players)
     this.currentPlayer = this.players[randomPlayer]
     //Select a starting game mode
     var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length);
