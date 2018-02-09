@@ -20,6 +20,18 @@ module.exports.listen = function (app) {
     socket.player = newPlayer
     playerList[socket.id] = socket
 
+    // On player disconnect - remove them from the player list
+    socket.on('disconnect', function () {
+      //  if the player is in a room, remove them from the room
+      console.log('disconnect: ', socket.id, socket)
+      if (playerList[socket.id] && playerList[socket.id].currentRoomId) {
+        roomList[playerList[socket.id].currentRoomId].roomData.playerDisconnect(socket)
+      }
+      // Remove them from the main player list
+      delete playerList[socket.id]
+      console.log(playerList[socket.id])
+    })
+
     // On player joining
     socket.on('join_party', function (partyid) {
       // Check if room exists
@@ -63,7 +75,7 @@ module.exports.listen = function (app) {
       // if(!roomList[partyid]){
       //* **********************
       // Set room up with a data object - pass the room name (party id) and socket
-      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, partyid, playerList, socket)
+      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, partyid, socket)
       var roomData = io.sockets.adapter.rooms[partyid].roomData
       roomData.addPlayerToRoom(socket.id)
       // set the player's current room
@@ -83,14 +95,9 @@ module.exports.listen = function (app) {
 
     //  A player in a room has said they are ready and passed their name
     socket.on('player_ready', function (playerName) {
-      var player = playerList[socket.id]
-      //  Set the player to ready
-      player.playerReady = true
-      player.playerName = playerName
-      //  Check if all players in the room are ready
-      setTimeout(function () {
-        roomList[player.currentRoomId].roomData.checkPlayersReady()
-      }, 500)
+      var partyid = playerList[socket.id].currentRoomId
+      console.log(partyid, playerList[socket.id])
+      roomList[partyid].roomData.setPlayerReady(socket, playerName)
     })
   })
   return io

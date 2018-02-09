@@ -5,10 +5,10 @@ var availableRounds = require('./available_rounds')
 var straightFace = require('./rounds/straight_face')
 var dirtyPint = require('./rounds/dirty_pint')
 
-module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList,socket) {
+module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
   this.roomName = roomName
   this.in_chat = false
-  this.players = playerList
+  this.players = {}
   this.currentPlayer = null
   this.currentRound = null
   this.io = io
@@ -16,7 +16,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList,
   this.uniqueCode = uniqueCode
   this.playersReady = false
   this.availableRounds = availableRounds
-  this.playerMin = 2 //SET THIS BACK TO 2 for the REAL GAME
+  this.playerMin = 3 //SET THIS BACK TO 2 for the REAL GAME
   this.gameLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
@@ -57,6 +57,19 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList,
     socket.emit('ready_check')
   }
 
+  this.playerDisconnect = function playerDisconnect (socket) {
+    delete this.players[socket.id]
+  }
+
+  this.setPlayerReady = function (socket, playerName) {
+    console.log('Recieved player ready!!!')
+    //  Set the player to ready
+    this.players[socket.id].playerReady = true
+    this.players[socket.id].playerName = playerName
+    console.log('Set player name ', this.players[socket.id])
+    //  Check if all players in the room are ready
+    this.checkPlayersReady()
+  }
 
   this.checkPlayersReady = function checkPlayersReady () {
     var playersReady = ''
@@ -65,7 +78,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList,
         console.log('This player is ready')
         playersReady = true
       } else {
-        console.log('Player is not ready: ', this.players[player].playerReady, this.players[player])
+        console.log('Player is not ready: ', this.players[player].playerReady)
         playersReady = false
         return false
       }
@@ -76,7 +89,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, playerList,
       if(Object.keys(this.players).length >= this.playerMin){
           this.beginGame()
       }else{
-        console.log("Players ready, waiting for " + (this.playerMin - Object.keys(this.players).length) +" more players")
+        console.log('Players ready, waiting for ' + (this.playerMin - Object.keys(this.players).length) +' more players to join and be ready')
       }
     }else{
       console.log('not all players are ready')
