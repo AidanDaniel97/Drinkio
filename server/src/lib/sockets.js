@@ -41,24 +41,29 @@ module.exports.listen = function (app) {
         //* **
         // Add a thing here to check for passwords blah blah blah
         //* ***
+        if (io.sockets.adapter.rooms[partyid].roomData.roomLocked) {
+          console.log('this room is locked')
+          //  room is locked - game is in progress
+          socket.emit('response', {'status': 'error', 'message': error['2']})
+        } else {
+          socket.join(partyid)
+          // Get the room data
+          var roomData = io.sockets.adapter.rooms[partyid].roomData
+          // Add this user to the chat's player list
+          roomData.addPlayerToRoom(socket.id)
 
-        socket.join(partyid)
-        // Get the room data
-        var roomData = io.sockets.adapter.rooms[partyid].roomData
-        // Add this user to the chat's player list
-        roomData.addPlayerToRoom(socket.id)
+          //  set the user's current room
+          playerList[socket.id].currentRoomId = partyid
+          playerList[socket.id].currentRoomName = roomData.roomName
 
-        //  set the user's current room
-        playerList[socket.id].currentRoomId = partyid
-        playerList[socket.id].currentRoomName = roomData.roomName
-
-        // set the player's current room
-        socket.emit('joined_party', {'partyName': roomData.roomName, 'roomCode': playerList[socket.id].currentRoomId})
-        //  Check if everyone is now ready
-        roomData.checkPlayersReady(socket)
+          // set the player's current room
+          socket.emit('joined_party', {'partyName': roomData.roomName, 'roomCode': playerList[socket.id].currentRoomId})
+          //  Check if everyone is now ready
+          roomData.checkPlayersReady(socket)
+        }
       } else {
         // Room doesnt exist
-        socket.emit('response', {'status': 'error', 'message': error['1000']})
+        socket.emit('response', {'status': 'error', 'message': error['1']})
       }
     })
 

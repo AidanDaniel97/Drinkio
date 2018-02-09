@@ -53,6 +53,9 @@ export default {
     chat_message: function (message) {
       this.messages.push({ playerName: message.playername, message: message.message })
     },
+    response: function (error) {
+      console.log(error)
+    },
     flash: function () {
       this.flashing = true
     },

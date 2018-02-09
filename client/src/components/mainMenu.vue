@@ -59,6 +59,11 @@ export default {
       partyName: ''
     }
   },
+  sockets: {
+    response: function (error) {
+      console.log(error)
+    }
+  },
   methods: {
     enterParty (event) {
       if (event === 'join') {

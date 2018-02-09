@@ -1,4 +1,5 @@
 {
-  "1000": "Sorry, this room doesn't exist.",
-  "1001": "other error..."
+  "1": "Sorry, this party doesn't exist.",
+  "2": "Sorry, this party has already started.",
+  "3": "other error..."
 }

@@ -16,8 +16,8 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
   this.uniqueCode = uniqueCode
   this.playersReady = false
   this.availableRounds = availableRounds
-  this.playerMin = 3 //SET THIS BACK TO 2 for the REAL GAME
-  this.gameLocked = false
+  this.playerMin = 1 //SET THIS BACK TO 2 for the REAL GAME
+  this.roomLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
   this.addPlayerToRoom = function (socketId) {
@@ -119,7 +119,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
 
 
   this.beginGame = function beginGame () {
-    this.gameLocked = true
+    this.roomLocked = true
     console.log('Beginning game...');
     //  Select the first person to go
     var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length);
