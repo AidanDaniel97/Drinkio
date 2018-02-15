@@ -1,6 +1,6 @@
 <template>
     <div class="">
-      <h1 v-on:click="send_player_ready" v-bind:class="{ flash: flashing }">{{ partyName }}</h1>
+      <h1 v-bind:class="{ flash: flashing }">{{ partyName }}</h1>
       <p>Join code: {{ roomCode }}</p>
        <ul id="messages">
          <li v-for='(message, index) in messages' :key='index'>
@@ -62,11 +62,6 @@ export default {
     players: function (value) {
       console.log(value)
     },
-    ready_check: function (value) {
-      console.log('player ready check')
-      //  send back ready
-      // this.$socket.emit('player_ready', true)
-    },
     log_this: function (value) {
       console.log('logged value: ', value)
       //  send back ready
@@ -81,11 +76,9 @@ export default {
       this.chatMessage = ''
       return false
     },
-    send_player_ready () {
-      this.$socket.emit('player_ready', this.playerName)
-    },
     sendPlayerReady () {
       this.showNameModal = false
+      this.$socket.emit('player_ready', this.playerName)
     }
   }
 }

@@ -65,6 +65,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
     console.log('Recieved player ready!!!')
     //  Set the player to ready
     this.players[socket.id].playerReady = true
+    console.log('player name: ', playerName)
     this.players[socket.id].playerName = playerName
     console.log('Set player name ', this.players[socket.id])
     //  Check if all players in the room are ready
@@ -106,11 +107,13 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
     switch (round) {
         case 'dirty_pint':
             console.log('Dirty pint!');
+            this.io.in(this.uniqueCode).emit('round_start', 'Dirty Pint')
             this.currentRound = new dirtyPint.NewRound(this.currentPlayer)
             this.currentRound.startRound()
             break;
         case 'straight_face':
             console.log('Straight Face!');
+            this.io.in(this.uniqueCode).emit('round_start', 'Straight Face!')
             this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this.io, this.socket)
             this.currentRound.startRound()
             break;
