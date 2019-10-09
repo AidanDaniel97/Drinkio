@@ -1,4 +1,4 @@
-module.exports.NewPlayer = function NewPlayer (socket) {
+module.exports.NewPlayer = function NewPlayer (socket, roomName) {
   this.playerName = ''
   this.currentRoomId = null
   this.currentRoomName = null

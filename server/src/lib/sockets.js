@@ -35,7 +35,7 @@ module.exports.listen = function (app) {
     // On player joining
     socket.on('join_party', function (partyid) {
       // Check if room exists
-      console.log(io.sockets.adapter.rooms[partyid], partyid)
+      // console.log(io.sockets.adapter.rooms[partyid], partyid)
       if (io.sockets.adapter.rooms[partyid]) {
         // This room already exists  - JOIN it
         //* **
