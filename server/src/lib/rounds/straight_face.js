@@ -10,7 +10,11 @@ module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, io
     // playerList.filter(x => x.player.socket != currentPlayerSocket);
     // this.readingPlayer = this.playerList[currentPlayerSocket]
     // this.writingPlayers = this.playerList.filter(x => x != currentPlayerSocket);
-      console.log(this , '======' , this.readingPlayer)
+    // console.log(this , '======' , this.readingPlayer)
+    console.log('===== ', this.playerList[0])
+    // this.playerList.filter(function(player) {
+    //   console.log('====', player)
+    // });
     // console.log('Round starting for straight face!')
     // //  First, remove the readingPlayer from the writing players list
     // // this.writingPlayers =

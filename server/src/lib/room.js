@@ -22,10 +22,8 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
   // true,debate_room_id,debate_name,debate_side)
   this.addPlayerToRoom = function (socketId) {
     var newPlayer = new Player.NewPlayer(socketId, this.roomName)
-    // Set the socket id so we can select this player by their socket id
-    console.log(' =======' ,this.players)
-    this.players[socketId] = newPlayer 
-    console.log(' =======' ,this.players)
+    // Set the socket id so we can select this player by their socket id 
+    this.players[socketId] = newPlayer
   }
 
   /** *******************
