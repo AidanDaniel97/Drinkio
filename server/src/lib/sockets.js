@@ -23,13 +23,13 @@ module.exports.listen = function (app) {
     // On player disconnect - remove them from the player list
     socket.on('disconnect', function () {
       //  if the player is in a room, remove them from the room
-      console.log('disconnect: ', socket.id, socket)
+      // console.log('disconnect: ', socket.id, socket)
       if (playerList[socket.id] && playerList[socket.id].currentRoomId) {
         roomList[playerList[socket.id].currentRoomId].roomData.playerDisconnect(socket)
       }
       // Remove them from the main player list
       delete playerList[socket.id]
-      console.log(playerList[socket.id])
+      // console.log(playerList[socket.id])
     })
 
     // On player joining
@@ -101,7 +101,7 @@ module.exports.listen = function (app) {
     //  A player in a room has said they are ready and passed their name
     socket.on('player_ready', function (playerName) {
       var partyid = playerList[socket.id].currentRoomId
-      console.log(partyid, playerList[socket.id])
+      // console.log(partyid, playerList[socket.id])
       roomList[partyid].roomData.setPlayerReady(socket, playerName)
     })
   })
