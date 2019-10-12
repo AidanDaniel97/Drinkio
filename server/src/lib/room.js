@@ -31,9 +31,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
     return this.players.filter(player => player.socket === socket.id)[0]
   }
 
-  /** *******************
-           CHAT
-    *********************/
+  /* Chat */
   this.chatMessage = function chatMessage (msg, socket) {
     var thisPlayer = this.getPlayer(socket)
     // commands
@@ -102,25 +100,20 @@ module.exports.NewRoom = function NewRoom (roomName, io, uniqueCode, socket) {
   }
 
   this.startRound = function startRound (round) {
-    // //If there is not a current player for this round
-    // if (!this.currentPlayer){
-    //   this.currentPlayer = Object.keys(this.players)[0]
-    //   console.log(this.currentPlayer)
-    // }
     switch (round) {
       case 'dirty_pint':
         console.log('Dirty pint!')
         this.io.in(this.uniqueCode).emit('round_start', 'Dirty Pint')
-        this.currentRound = new dirtyPint.NewRound(this.currentPlayer)
-        this.currentRound.startRound()
+        this.currentRound = new dirtyPint.NewRound(this.currentPlayer, this.players, this.io)
         break
       case 'straight_face':
         console.log('Straight Face!')
         this.io.in(this.uniqueCode).emit('round_start', 'Straight Face!')
-        this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this.io, this.socket)
-        this.currentRound.startRound()
+        this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this.io)
         break
     }
+    // start the game
+    this.currentRound.startRound()
   }
 
   this.beginGame = function beginGame () {

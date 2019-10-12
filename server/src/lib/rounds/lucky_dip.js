@@ -1,4 +1,4 @@
-// Dirty pint - a player must add their drink to the group's cup.
+// Player must choose if they accept the lucky dip or not, there is a chance of getting to dish out a sip of drink, or to have to take two sips
 module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, io) {
   this.readingPlayer = playerList[currentPlayerSocket]
   this.writingPlayers = []
