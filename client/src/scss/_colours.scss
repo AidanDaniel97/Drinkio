@@ -1,58 +1,25 @@
-// Citrus
-$citrus: #EE730B;
-$citrus-2: #F4D6C0;
-$citrus-3: #FDEAD8;
-$citrus-grad: linear-gradient(90deg, #EE730B 0%, #FAC8A4 100%);
 
-// Aqua
-$aqua: #2BB5B5;
-$aqua-2: #92D6D6;
-$aqua-3: #D4E9E9;
-$aqua-grad: linear-gradient(90deg, #2BB5B5 0%, #C2E3E3 100%);
-
-// Powder
-$powder: #72A4DB;
-$powder-2: #D6E8FB;
-$powder-grad: linear-gradient(90deg, #72A4DB 0%, #B7D3F0 100%);
-
-// Monos
-$slate: #3D3D3D;
-$pencil: #C6C6C6;
-$pencil90: rgba(198, 198, 198, 0.9); // 90 percent opacity
-$stone: #D9D8D8;
-$grey: #E9E9E9;
+$black: #000000;
 $white: #FFFFFF;
-
-// Others
 $red: #cb1010;
 $green: #28cf5c;
 
+$lightGrey: #6b6b69;
+$lightBlue: #77B6EA;
+
 // Set Colour arrays
-$brand-colors:
-	("citrus",$citrus),
-	("citrus-2", $citrus-2),
-	("citrus-3",$citrus-3),
-	("aqua",$aqua),
-	("aqua-2", $aqua-2),
-	("aqua-3",$aqua-3),
-	("powder",$powder),
-	("powder-2", $powder-2),
-	("slate",$slate),
-	("pencil",$pencil),
-	("stone", $stone),
-	("grey",$grey),
+$app-colours:
+	("lightBlue",$lightBlue),
+	("lightGrey",$lightGrey),
+	("black",$black),
 	("white",$white),
 	("red",$red),
 	("green",$green);
-$gradients:
-	("citrus",$citrus-grad),
-	("aqua",$aqua-grad),
-	("powder",$powder-grad);
 
 
 // Backgrounds & Colours
 	// Solid
-@each $color in $brand-colors {
+@each $color in $app-colours {
 	.bg-#{nth($color,1)} {
 		background-color: nth($color,2)!important;
 	}
@@ -68,65 +35,4 @@ $gradients:
 }
 .bg-hover:hover {
 	opacity: 0.6;
-}
-// Gradients
-.gradient {
-	@each $color in $gradients {
-		&.#{nth($color,1)} {
-			background: nth($color,2);
-		}
-	}
-}
-
-// Text links
-.go {
-	position: relative;
-	padding-right: 2rem;
-	@each $color in $brand-colors {
-		&.#{nth($color,1)} {
-			&:before {
-				content: '';
-				position: absolute;
-				top: -12px;
-				right: -1rem;
-				width: calc(1.6em + 0.75rem + 2px);
-				height: calc(1.6em + 0.75rem + 2px);
-				background-color: nth($color,2);
-				border-radius: 50px;
-				transition: all 0.3s ease;
-
-				@include media-breakpoint-down(sm) {
-					top: -5px;
-					right: 0;
-					width: calc(1em + 0.5rem + 2px);
-					height: calc(1em + 0.5rem + 2px);
-				}
-			}
-			&:after {
-				content: '';
-				position: absolute;
-				top: -12px;
-				right: -1rem;
-				width: calc(1.6em + 0.75rem + 2px);
-				height: calc(1.6em + 0.75rem + 2px);
-				background-size: contain;
-				border-radius: 50px;
-
-				@include media-breakpoint-down(sm) {
-					top: -5px;
-					right: 0;
-					width: calc(1em + 0.5rem + 2px);
-					height: calc(1em + 0.5rem + 2px);
-				}
-			}
-		}
-		&.hover-#{nth($color,1)} {
-			&:hover {
-				&:before {
-					background-color: nth($color,2);
-					transition: all 0.3s ease;
-				}
-			}
-		}
-	}
 }

@@ -1,15 +1,30 @@
 <template>
-    <div class="">
+    <div class="mar-t-80 party-room">
+      <h2>Welcome to</h2>
       <h1 v-bind:class="{ flash: flashing }">{{ partyName }}</h1>
       <p>Join code: {{ roomCode }}</p>
-       <ul id="messages">
+
+
+       <!-- <ul id="messages">
          <li v-for='(message, index) in messages' :key='index'>
             <p>{{ message.playerName }}: {{ message.message }}</p>
           </li>
        </ul>
        <form action="" v-on:submit.prevent="send_message">
          <input autocomplete="off" v-model="chatMessage" id="message" /><button>Send</button>
-       </form>
+       </form> -->
+
+
+       <div class="round-card">
+         <div class="card-front">
+             <h2>front</h2>
+         </div>
+         <div class="card-back">
+           <h2>back</h2>
+         </div>
+       </div>
+
+
 
        <modal v-if="showNameModal">
          <h3 slot="header">Enter your name</h3>

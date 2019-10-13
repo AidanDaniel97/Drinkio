@@ -1,15 +1,20 @@
 button {
 	border: none;
 }
-.aqua-dropdown{
-	div, button{
-		color:white;
-		background-color: $aqua;
-	}
-}
+ 
 
 .btn {
-	border: none!important;
+	&.home-btn{
+		display: block;
+		font-size: 2rem;
+	}
+
+  margin: 0 auto;
+  width: 80%;
+  padding: 13px;
+	background-color: none;
+	color: white;
+	border: 1px solid white!important;
 	// Standard Buttons
 	&.lg {
 		font-size: 1.25rem;
@@ -50,7 +55,7 @@ button {
 		}
 		&.arrow-left {
 			position: relative;
-			&:before { 
+			&:before {
 				position: absolute;
 				transform: rotate(180deg);
 				top: 0;

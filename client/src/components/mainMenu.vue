@@ -1,22 +1,24 @@
 <template>
-    <div class="">
+    <div class="mar-t-100">
       <div class="container">
-        <h1 class="menu-title">Drinkio</h1>
-
-        <button v-on:click="showCreateModal = true" type="button" class="btn btn-primary menu-buttons" data-toggle="modal" data-target="#roomModal">Create Party</button>
-        
-        <button v-on:click="showJoinModal = true" type="button" class="btn btn-primary menu-buttons" data-toggle="modal" data-target="#roomModal" >Join Party</button>
+        <h1 class="menu-title mar-b-80">Drinkio</h1>
+        <div class="row">
+          <div class="col-xs-12">
+            <button v-on:click="showCreateModal = true" type="button" class="btn home-btn menu-buttons mar-b-30" data-toggle="modal" data-target="#roomModal">Create Party</button>
+            <button v-on:click="showJoinModal = true" type="button" class="btn home-btn menu-buttons mar-b-30" data-toggle="modal" data-target="#roomModal" >Join Party</button>
+          </div>
+        </div>
       </div>
 
       <!-- Create Modal -->
       <modal v-if="showCreateModal">
-        <h3 slot="header">Create Room</h3>
+        <h2 slot="header">Create Room</h2>
         <p slot="body">
           Enter the name of the room you wish to create:
           <input v-model="partyName" type="text" placeholder="Room Name" name="" value="">
         </p>
         <div slot="footer">
-          <button class="modal-default-button" v-on:click="enterParty('create')">
+          <button class="btn" v-on:click="enterParty('create')">
             Create
           </button>
         </div>
@@ -24,13 +26,13 @@
 
       <!-- Join Modal -->
       <modal v-if="showJoinModal">
-        <h3 slot="header">Join Room</h3>
+        <h2 slot="header">Join Room</h2>
         <p slot="body">
           Enter the room code to join:
-          <input v-model="roomCode" type="text" placeholder="Room Code" name="" value="">
+          <input class="colour-black" v-model="roomCode" type="text" placeholder="Room Code" name="" value="">
         </p>
         <div slot="footer">
-          <button class="modal-default-button" v-on:click="enterParty('join')">
+          <button class="btn" v-on:click="enterParty('join')">
             Join
           </button>
         </div>

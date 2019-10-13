@@ -7,9 +7,13 @@
 @import "spacers";
 @import "loader";
 @import "modals";
+@import "cards";
+@import "partyRoom";
+
 
 html{
   height:100%;
+  overflow: hidden;
 }
 
 body {
@@ -25,7 +29,10 @@ body {
 
 #app{
   height:100%;
-  margin-top:60px;
+}
+
+input{
+  color:$lightGrey;
 }
 
 
