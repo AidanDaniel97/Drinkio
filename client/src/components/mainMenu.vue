@@ -1,14 +1,11 @@
 <template>
     <div class="">
       <div class="container">
-        <div class="row">
-          <div class="col-xs-12">
-            <button v-on:click="showCreateModal = true" type="button" class="btn btn-primary menu-buttons" data-toggle="modal" data-target="#roomModal">Create Party</button>
-          </div>
-          <div class="col-xs-12">
-            <button v-on:click="showJoinModal = true" type="button" class="btn btn-primary menu-buttons" data-toggle="modal" data-target="#roomModal" >Join Party</button>
-          </div>
-        </div>
+        <h1 class="menu-title">Drinkio</h1>
+
+        <button v-on:click="showCreateModal = true" type="button" class="btn btn-primary menu-buttons" data-toggle="modal" data-target="#roomModal">Create Party</button>
+        
+        <button v-on:click="showJoinModal = true" type="button" class="btn btn-primary menu-buttons" data-toggle="modal" data-target="#roomModal" >Join Party</button>
       </div>
 
       <!-- Create Modal -->

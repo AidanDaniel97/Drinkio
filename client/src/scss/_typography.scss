@@ -1,0 +1,104 @@
+// Typography
+$font-family-roboto: 'Roboto', sans-serif;
+
+$font-size-base: 1rem;
+$line-height-base: 1.6;
+$font-bold: 600;
+
+h1,
+.h1 {
+	font-size: 2.8125rem!important;
+	font-family: $font-family-roboto;
+	font-weight: $font-bold!important;
+	&.menu-title{
+		font-size: 5rem;
+	}
+	@include media-breakpoint-down(sm) {
+		font-size: 5rem!important;
+	}
+}
+
+h2,
+.h2 {
+	font-size: 2rem!important;
+	font-family: $font-family-roboto;
+	font-weight: $font-bold!important;
+	@include media-breakpoint-down(sm) {
+		font-size: 1.75rem!important;
+	}
+}
+
+h3,
+.h3 {
+	font-size: 1.25rem!important;
+	font-family: $font-family-roboto;
+	font-weight: $font-bold!important;
+	@include media-breakpoint-down(sm) {
+	}
+}
+
+h4,
+.h4 {
+	font-size: 1rem!important;
+	font-family: $font-family-roboto;
+	font-weight: $font-bold!important;
+	@include media-breakpoint-down(sm) {
+	}
+}
+
+p,
+.p {
+	font-size: 1rem;
+	@include media-breakpoint-down(sm) {
+	}
+}
+
+small,
+.small {
+	font-size: 0.8125rem;
+}
+.bold {
+	font-weight: bold!important;
+}
+.italics {
+	font-style: italic!important;
+}
+.underline {
+	text-decoration: underline!important;
+}
+
+a {
+	text-decoration: none;
+}
+.link {
+	position: relative;
+	&:after {
+		content: "";
+		position: absolute;
+		width: 0;
+		height: 2px;
+		transition: all 0.2s ease;
+		bottom: -3px;
+		left: 50%;
+	}
+	&:hover {
+		&:after {
+			width: 100%;
+			left: 0;
+			transition: all 0.2s ease;
+		}
+	}
+	&.slate {
+		color: $slate;
+		&:after {
+			background-color: $slate;
+		}
+	}
+	&.citrus {
+		color: $citrus;
+		&:after {
+			background-color: $citrus;
+
+		}
+	}
+}
