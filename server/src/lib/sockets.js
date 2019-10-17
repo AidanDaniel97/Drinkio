@@ -92,14 +92,15 @@ module.exports.listen = function (app) {
       roomData.sendPlayerReadyCheck(socket)
     })
     // Send message to room object
-    socket.on('chat_message', function (message) {
+    socket.on('chatMessage', function (message) {
       var partyid = playerList[socket.id].currentRoomId
       // Pass the room object the message and the socket it was from
       roomList[partyid].roomData.chatMessage(message, socket)
     })
 
     //  A player in a room has said they are ready and passed their name
-    socket.on('player_ready', function (playerName) {
+    socket.on('playerReady', function (playerName) {
+      console.log('Recieved ready')
       var partyid = playerList[socket.id].currentRoomId
       // console.log(partyid, playerList[socket.id])
       roomList[partyid].roomData.setPlayerReady(socket, playerName)
