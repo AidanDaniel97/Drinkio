@@ -2,20 +2,12 @@
     <div class="mar-t-80 party-room">
       <h2>Welcome to</h2>
       <h1 v-bind:class="{ flash: flashing }">{{ partyName }}</h1>
-      <p>Join code: {{ roomCode }}</p>
+      <p>Join code: {{ partyCode }}</p>
 
-       <!-- <ul id="messages">
-         <li v-for='(message, index) in messages' :key='index'>
-            <p>{{ message.playerName }}: {{ message.message }}</p>
-          </li>
-       </ul>
-       <form action="" v-on:submit.prevent="sendMessage">
-         <input autocomplete="off" v-model="chatMessage" id="message" /><button>Send</button>
-       </form> -->
-
-       <div class="playing-area">
+      <!-- Could move this into a seperate component -->
+       <div v-if="showRoundCard" class="playing-area">
          <div class="round-card">
-           <h2>Some title</h2>
+           <h2>this.currentRound</h2>
          </div>
        </div>
 
@@ -56,7 +48,7 @@ export default {
     // eslint-disable-next-line
     partyName: app.partyName,
     // eslint-disable-next-line
-    roomCode: app.roomCode
+    partyCode: app.partyCode
   },
   sockets: {
     startRound: function (round) {

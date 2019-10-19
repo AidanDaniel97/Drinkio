@@ -57,7 +57,7 @@ module.exports.listen = function (app) {
           playerList[socket.id].currentRoomName = roomData.roomName
 
           // set the player's current room
-          socket.emit('joined_party', {'partyName': roomData.roomName, 'roomCode': playerList[socket.id].currentRoomId})
+          socket.emit('joined_party', {'partyName': roomData.roomName, 'partyCode': playerList[socket.id].currentRoomId})
           //  Check if everyone is now ready
           roomData.checkPlayersReady(socket)
         }
@@ -87,7 +87,7 @@ module.exports.listen = function (app) {
       playerList[socket.id].currentRoomId = partyid
       playerList[socket.id].currentRoomName = partyName
 
-      socket.emit('created_party', {'partyName': partyName, 'roomCode': partyid})
+      socket.emit('created_party', {'partyName': partyName, 'partyCode': partyid})
       //  on connect, send them a ready check
       roomData.sendPlayerReadyCheck(socket)
     })

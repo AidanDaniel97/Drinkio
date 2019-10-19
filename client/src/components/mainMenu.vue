@@ -29,7 +29,7 @@
         <h2 slot="header">Join Room</h2>
         <p slot="body">
           Enter the room code to join:
-          <input class="colour-black" v-model="roomCode" type="text" placeholder="Room Code" name="" value="">
+          <input class="colour-black" v-model="partyCode" type="text" placeholder="Room Code" name="" value="">
         </p>
         <div slot="footer">
           <button class="btn" v-on:click="enterParty('join')">
@@ -54,7 +54,7 @@ export default {
     return {
       showJoinModal: false,
       showCreateModal: false,
-      roomCode: '',
+      partyCode: '',
       partyName: ''
     }
   },
@@ -66,7 +66,7 @@ export default {
   methods: {
     enterParty (event) {
       if (event === 'join') {
-        this.$emit('enterParty', {'event': 'join', 'roomCode': this.roomCode})
+        this.$emit('enterParty', {'event': 'join', 'partyCode': this.partyCode})
       } else {
         this.$emit('enterParty', {'event': 'create', 'partyName': this.partyName})
       }
