@@ -15,7 +15,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.partyid = partyid
   this.playersReady = false
   this.availableRounds = availableRounds
-  this.playerMin = 1 // SET THIS BACK TO 2 for the REAL GAME
+  this.playerMin = 2 // SET THIS BACK TO 2 for the REAL GAME
   this.roomLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
@@ -103,13 +103,9 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.startRound = function startRound (round) {
     switch (round) {
       case 'dirty_pint':
-        console.log('Dirty pint!')
-        this.io.in(this.partyid).emit('startRound', 'Dirty Pint')
         this.currentRound = new dirtyPint.NewRound(this.currentPlayer, this.players, this.io, this)
         break
       case 'straight_face':
-        console.log('Straight Face!')
-        this.io.in(this.partyid).emit('startRound', 'Straight Face!')
         this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this.io, this)
         break
     }
@@ -130,7 +126,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     this.startRound(availableRounds[randomRound])
   }
 
-  this.broadcastRoundUpdate = function broadcastRoundUpdate (packet) {
-    this.io.in(this.partyid).emit('roundUpdate', packet)
+  this.broadcastUpdate = function broadcastUpdate (update, packet) {
+    this.io.in(this.partyid).emit(update, packet)
   }
 }
