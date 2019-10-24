@@ -1,8 +1,8 @@
+/* eslint no-unused-vars: 0 */
 //  var socketio = require('socket.io')
 var Player = require('./player.js')
 var availableRounds = require('./available_rounds')
 var straightFace = require('./rounds/straight_face')
-var dirtyPint = require('./rounds/dirty_pint')
 
 module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.roomName = roomName
@@ -15,7 +15,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.partyid = partyid
   this.playersReady = false
   this.availableRounds = availableRounds
-  this.playerMin = 2 // SET THIS BACK TO 2 for the REAL GAME
+  this.playerMin = 1 // SET THIS BACK TO 2 for the REAL GAME
   this.roomLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
@@ -72,8 +72,6 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     console.log(thisPlayer)
     //  Set the player to ready
     thisPlayer.playerReady = true
-    // console.log('player name: ', playerName)
-    // console.log('Set player name ', thisPlayer)
     //  Check if all players in the room are ready
     this.checkPlayersReady()
   }
@@ -101,15 +99,12 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   }
 
   this.startRound = function startRound (round) {
-    switch (round) {
-      case 'dirty_pint':
-        this.currentRound = new dirtyPint.NewRound(this.currentPlayer, this.players, this.io, this)
-        break
-      case 'straight_face':
-        this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this.io, this)
+    switch (round.id) {
+      case 1: // Straight Face
+        this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this.io, this, round)
         break
     }
-    // start the game
+    // Start the game
     this.currentRound.startRound()
   }
 
@@ -118,7 +113,6 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     console.log('Beginning game...')
     //  Select the first person to go
     var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length)
-    // console.log('Random player: ', this.players[randomPlayer], this.players)
     this.io.emit('logThis', this.players)
     this.currentPlayer = Object.keys(this.players)[randomPlayer]
     // Select a starting game mode
@@ -126,7 +120,13 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     this.startRound(availableRounds[randomRound])
   }
 
+  // Send update to room from round
   this.broadcastUpdate = function broadcastUpdate (update, packet) {
     this.io.in(this.partyid).emit(update, packet)
+  }
+
+  // On update recieved
+  this.onUpdateRecieved = function onUpdateRecieved () {
+    this.currentRoom.onUpdateRecieved()
   }
 }

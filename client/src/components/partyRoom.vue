@@ -5,11 +5,7 @@
       <p>Join code: {{ partyCode }}</p>
 
       <!-- Could move this into a seperate component -->
-       <div v-if="showRoundCard" class="playing-area">
-         <div class="round-card">
-           <h2>this.currentRound</h2>
-         </div>
-       </div>
+       <component v-bind:is="currentRoundCard"></component>
 
        <modal v-if="showNameModal">
          <h3 slot="header">Enter your name</h3>
@@ -28,11 +24,13 @@
 <script>
 //  Components
 import Modal from './modal'
+import StraightFace from './game_cards/StraightFace'
 
 export default {
   name: 'partyRoom',
   components: {
-    'modal': Modal
+    'modal': Modal,
+    'StraightFace': StraightFace
   },
   data () {
     return {
@@ -41,7 +39,8 @@ export default {
       flashing: false,
       showNameModal: true,
       playerName: '',
-      currentRound: ''
+      currentRound: '',
+      currentRoundCard: '',
     }
   },
   props: {
@@ -52,8 +51,9 @@ export default {
   },
   sockets: {
     startRound: function (round) {
-      console.log(round)
       this.currentRound = round
+      console.log(round)
+      this.currentRoundCard = round.roundName.split(" ").join("")
     },
     roundUpdate: function (packet) {
       console.log('Update message: ', packet)

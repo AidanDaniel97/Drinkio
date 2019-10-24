@@ -1,3 +1,0 @@
-"1": "dirty_pint",
-"2": "make_a_rule",
-"3": "lucky_dip"
