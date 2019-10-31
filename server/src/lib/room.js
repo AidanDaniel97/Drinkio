@@ -6,7 +6,6 @@ var straightFace = require('./rounds/straight_face')
 
 module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.roomName = roomName
-  this.inChat = false
   this.players = []
   this.currentPlayer = null
   this.currentRound = null
@@ -15,7 +14,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.partyid = partyid
   this.playersReady = false
   this.availableRounds = availableRounds
-  this.playerMin = 1 // SET THIS BACK TO 2 for the REAL GAME
+  this.playerMin = 2 // SET THIS BACK TO 2 for the REAL GAME
   this.roomLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
@@ -100,8 +99,9 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
 
   this.startRound = function startRound (round) {
     switch (round.id) {
+      // new round - current player whos turn it is, list of players,
       case 1: // Straight Face
-        this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this.io, this, round)
+        this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this)
         break
     }
     // Start the game
@@ -110,10 +110,8 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
 
   this.beginGame = function beginGame () {
     this.roomLocked = true
-    console.log('Beginning game...')
     //  Select the first person to go
     var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length)
-    this.io.emit('logThis', this.players)
     this.currentPlayer = Object.keys(this.players)[randomPlayer]
     // Select a starting game mode
     var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length)

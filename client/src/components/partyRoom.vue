@@ -40,7 +40,7 @@ export default {
       showNameModal: true,
       playerName: '',
       currentRound: '',
-      currentRoundCard: '',
+      currentRoundCard: ''
     }
   },
   props: {
@@ -50,10 +50,10 @@ export default {
     partyCode: app.partyCode
   },
   sockets: {
-    startRound: function (round) {
-      this.currentRound = round
-      console.log(round)
-      this.currentRoundCard = round.roundName.split(" ").join("")
+    startRound: function (data) {
+      console.log(data)
+      this.currentRound = data.round
+      this.currentRoundCard = data.round.roundName.split(' ').join('')
     },
     roundUpdate: function (packet) {
       console.log('Update message: ', packet)

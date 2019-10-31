@@ -1,7 +1,7 @@
 <template>
   <div class="playing-area">
     <div class="round-card">
-      <h2>Game Card ... Straight Face</h2>
+      <h2>Straight Face</h2>
     </div>
   </div>
 </template>
