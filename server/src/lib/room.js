@@ -1,12 +1,11 @@
+/* eslint no-unused-vars: 0 */
 //  var socketio = require('socket.io')
 var Player = require('./player.js')
 var availableRounds = require('./available_rounds')
 var straightFace = require('./rounds/straight_face')
-var dirtyPint = require('./rounds/dirty_pint')
 
 module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.roomName = roomName
-  this.inChat = false
   this.players = []
   this.currentPlayer = null
   this.currentRound = null
@@ -72,8 +71,6 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     console.log(thisPlayer)
     //  Set the player to ready
     thisPlayer.playerReady = true
-    // console.log('player name: ', playerName)
-    // console.log('Set player name ', thisPlayer)
     //  Check if all players in the room are ready
     this.checkPlayersReady()
   }
@@ -101,32 +98,33 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   }
 
   this.startRound = function startRound (round) {
-    switch (round) {
-      case 'dirty_pint':
-        this.currentRound = new dirtyPint.NewRound(this.currentPlayer, this.players, this.io, this)
-        break
-      case 'straight_face':
-        this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this.io, this)
+    switch (round.id) {
+      // new round - current player whos turn it is, list of players,
+      case 1: // Straight Face
+        this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this)
         break
     }
-    // start the game
+    // Start the game
     this.currentRound.startRound()
   }
 
   this.beginGame = function beginGame () {
     this.roomLocked = true
-    console.log('Beginning game...')
     //  Select the first person to go
     var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length)
-    // console.log('Random player: ', this.players[randomPlayer], this.players)
-    this.io.emit('logThis', this.players)
     this.currentPlayer = Object.keys(this.players)[randomPlayer]
     // Select a starting game mode
     var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length)
     this.startRound(availableRounds[randomRound])
   }
 
+  // Send update to room from round
   this.broadcastUpdate = function broadcastUpdate (update, packet) {
     this.io.in(this.partyid).emit(update, packet)
+  }
+
+  // On update recieved
+  this.onUpdateRecieved = function onUpdateRecieved () {
+    this.currentRoom.onUpdateRecieved()
   }
 }
