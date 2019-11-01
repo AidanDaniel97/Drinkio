@@ -5,7 +5,7 @@
       <p>Join code: {{ partyCode }}</p>
 
       <!-- Could move this into a seperate component -->
-       <component v-bind:is="currentRoundCard"></component>
+       <component :current-round="initialRoundData" ref="currentGameCard" v-bind:is="currentRoundCard"></component>
 
        <modal v-if="showNameModal">
          <h3 slot="header">Enter your name</h3>
@@ -39,7 +39,7 @@ export default {
       flashing: false,
       showNameModal: true,
       playerName: '',
-      currentRound: '',
+      currentRoundName: '',
       currentRoundCard: ''
     }
   },
@@ -51,12 +51,12 @@ export default {
   },
   sockets: {
     startRound: function (data) {
-      console.log(data)
-      this.currentRound = data.round
+      this.initialRoundData = data
+      this.currentRoundName = data.round
       this.currentRoundCard = data.round.roundName.split(' ').join('')
     },
     roundUpdate: function (packet) {
-      console.log('Update message: ', packet)
+      this.$refs.currentGameCard.roomUpdate(packet)
     },
     chatMessage: function (message) {
       this.messages.push({ playerName: message.playername, message: message.message })
@@ -77,12 +77,8 @@ export default {
     }
   },
   methods: {
-    sendMessage () {
-      var message = this.chatMessage
-      console.log(message)
-      this.$socket.emit('chatMessage', message)
-      this.chatMessage = ''
-      return false
+    sendRoundUpdate (update, data) {
+      this.$socket.emit(update, 'this is some test data')
     },
     sendPlayerReady () {
       this.showNameModal = false

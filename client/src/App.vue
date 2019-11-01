@@ -29,7 +29,7 @@ export default {
       this.partyCode = val.partyCode
     },
     joined_party: function (val) {
-      console.log('Created party room', val)
+      console.log('Joined party room', val)
       this.showMainMenu = false
       this.partyName = val.partyName
       this.partyCode = val.partyCode

@@ -9,15 +9,20 @@
 <script>
 export default {
   name: 'StraightFace',
+  props: ['currentRound'],
   data () {
     return {
     }
   },
-  props: {
-  },
   sockets: {
   },
   methods: {
+    roundUpdate: function (update) {
+      console.log('Got round update: ', update)
+    }
+  },
+  mounted () {
+    console.log('Mounted')
   }
 }
 </script>

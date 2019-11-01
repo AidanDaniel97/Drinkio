@@ -14,7 +14,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.partyid = partyid
   this.playersReady = false
   this.availableRounds = availableRounds
-  this.playerMin = 2 // SET THIS BACK TO 2 for the REAL GAME
+  this.playerMin = 1 // SET THIS BACK TO 2 for the REAL GAME
   this.roomLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
@@ -30,45 +30,19 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     return this.players.filter(player => player.socket === socket.id)[0]
   }
 
-  /* Chat */
-  this.chatMessage = function chatMessage (msg, socket) {
-    var thisPlayer = this.getPlayer(socket)
-    // commands
-    var command = msg.split(' ')
-
-    if (msg === '/flash') {
-      this.io.in(this.partyid).emit('flash', msg)
-    } else if (msg === '/players') {
-      // console.log(this.players)
-      this.io.in(this.partyid).emit('players', this.players)
-    } else if (command[0].toLowerCase() === '/name') {
-      var name = command[1]
-      thisPlayer.setPlayerName(name)
-    } else {
-      var message = {
-        'message': msg,
-        'playername': thisPlayer.playerName
-      }
-      this.io.in(this.partyid).emit('chatMessage', message)
-    }
+  this.playerDisconnect = function playerDisconnect (socket) {
+    this.players = this.players.filter(player => player.socket !== socket)
   }
 
-  /*
-  Room Logic
-  */
+  /*  Send player ready checks  */
   this.sendPlayerReadyCheck = function sendPlayerReadyCheck (socket) {
     console.log('send ready check...')
     socket.emit('ready_check')
   }
 
-  this.playerDisconnect = function playerDisconnect (socket) {
-    this.players = this.players.filter(player => player.socket !== socket)
-  }
-
   this.setPlayerReady = function (socket, playerName) {
     var thisPlayer = this.getPlayer(socket)
     thisPlayer.setPlayerName(playerName)
-    console.log(thisPlayer)
     //  Set the player to ready
     thisPlayer.playerReady = true
     //  Check if all players in the room are ready
@@ -76,18 +50,9 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   }
 
   this.checkPlayersReady = function checkPlayersReady () {
-    var playersReady = true
-    for (var player in this.players) {
-      console.log(this.players[player].playerReady)
-      if (!this.players[player].playerReady) {
-        playersReady = false
-        return false
-      }
-    }
-
     // All players ready and there is more or equal players than the minumum
-    if (playersReady) {
-      if (Object.keys(this.players).length >= this.playerMin) {
+    if (this.players.filter(player => player.playerReady).length === this.players.length) {
+      if (Object.keys(this.players).length >= this.playerMin) { // all players are ready and meet the min players
         this.beginGame()
       } else {
         console.log('Players ready, waiting for ' + (this.playerMin - Object.keys(this.players).length) + ' more players to join and be ready')
@@ -124,7 +89,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   }
 
   // On update recieved
-  this.onUpdateRecieved = function onUpdateRecieved () {
-    this.currentRoom.onUpdateRecieved()
+  this.onRoundUpdate = function onRoundUpdate (updateData, socket) {
+    this.currentRound.onRoundUpdate(updateData, socket)
   }
 }

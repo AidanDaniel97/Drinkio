@@ -49,7 +49,7 @@ module.exports.listen = function (app) {
           socket.join(partyid)
           // Get the room data
           var roomData = io.sockets.adapter.rooms[partyid].roomData
-          // Add this user to the chat's player list
+          // Add this user to the room's player list
           roomData.addPlayerToRoom(socket.id)
 
           //  set the user's current room
@@ -91,11 +91,12 @@ module.exports.listen = function (app) {
       //  on connect, send them a ready check
       roomData.sendPlayerReadyCheck(socket)
     })
+
     // Send message to room object
-    socket.on('chatMessage', function (message) {
+    socket.on('roundUpdate', function (updateData) {
       var partyid = playerList[socket.id].currentRoomId
       // Pass the room object the message and the socket it was from
-      roomList[partyid].roomData.chatMessage(message, socket)
+      roomList[partyid].roomData.onRoundUpdate(updateData, socket)
     })
 
     //  A player in a room has said they are ready and passed their name
