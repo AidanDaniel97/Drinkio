@@ -30,7 +30,7 @@ h2,
 
 h3,
 .h3 {
-	font-size: 1.25rem!important;
+	font-size: 1.75rem!important;
 	font-family: $font-family-roboto;
 	font-weight: $font-bold!important;
 	@include media-breakpoint-down(sm) {
@@ -39,7 +39,7 @@ h3,
 
 h4,
 .h4 {
-	font-size: 1rem!important;
+	font-size: 1.5rem!important;
 	font-family: $font-family-roboto;
 	font-weight: $font-bold!important;
 	@include media-breakpoint-down(sm) {

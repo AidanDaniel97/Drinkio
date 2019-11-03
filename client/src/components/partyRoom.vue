@@ -1,11 +1,11 @@
 <template>
     <div class="mar-t-80 party-room">
       <h2>Welcome to</h2>
-      <h1 v-bind:class="{ flash: flashing }">{{ partyName }}</h1>
-      <p>Join code: {{ partyCode }}</p>
+      <h1>{{ $store.getters.partyName }}</h1>
+      <p>Join code: {{ $store.getters.partyCode }}</p>
 
       <!-- Could move this into a seperate component -->
-       <component :current-round="initialRoundData" ref="currentGameCard" v-bind:is="currentRoundCard"></component>
+       <component :round-data="roundData" ref="currentGameCard" v-bind:is="currentRoundCard"></component>
 
        <modal v-if="showNameModal">
          <h3 slot="header">Enter your name</h3>
@@ -36,44 +36,19 @@ export default {
     return {
       chatMessage: '',
       messages: [],
-      flashing: false,
       showNameModal: true,
       playerName: '',
-      currentRoundName: '',
-      currentRoundCard: ''
+      currentRoundCard: '',
+      roundData: ''
     }
-  },
-  props: {
-    // eslint-disable-next-line
-    partyName: app.partyName,
-    // eslint-disable-next-line
-    partyCode: app.partyCode
   },
   sockets: {
     startRound: function (data) {
-      this.initialRoundData = data
-      this.currentRoundName = data.round
+      this.roundData = data
       this.currentRoundCard = data.round.roundName.split(' ').join('')
     },
     roundUpdate: function (packet) {
       this.$refs.currentGameCard.roomUpdate(packet)
-    },
-    chatMessage: function (message) {
-      this.messages.push({ playerName: message.playername, message: message.message })
-    },
-    response: function (error) {
-      console.log(error)
-    },
-    flash: function () {
-      this.flashing = true
-    },
-    players: function (value) {
-      console.log(value)
-    },
-    logThis: function (value) {
-      console.log('logged value: ', value)
-      //  send back ready
-      // this.$socket.emit('playerReady', true)
     }
   },
   methods: {

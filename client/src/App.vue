@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <mainMenu @enterParty="enterParty" v-if="showMainMenu"></mainMenu>
-    <partyRoom v-else :partyCode='partyCode' :partyName='partyName'></partyRoom>
+    <partyRoom v-else></partyRoom>
   </div>
 </template>
 
@@ -10,9 +10,7 @@ export default {
   name: 'App',
   data () {
     return {
-      showMainMenu: true,
-      partyCode: '',
-      partyName: ''
+      showMainMenu: true
     }
   },
   sockets: {
@@ -22,22 +20,22 @@ export default {
     error_message: function (val) {
       console.log('Error recieved: ', val)
     },
-    created_party: function (val) {
-      console.log('Created party room', val)
-      this.showMainMenu = false
-      this.partyName = val.partyName
-      this.partyCode = val.partyCode
+    playerUpdate: function (data) {
+      this.$store.commit('setPlayerUpdate', data)
     },
-    joined_party: function (val) {
-      console.log('Joined party room', val)
+    createdParty: function (data) {
+      console.log('Created party room', data)
       this.showMainMenu = false
-      this.partyName = val.partyName
-      this.partyCode = val.partyCode
+      this.$store.commit('setPlayerData', data)
+    },
+    joinedParty: function (data) {
+      console.log('Joined party room', data)
+      this.showMainMenu = false
+      this.$store.commit('setPlayerData', data)
     }
   },
   methods: {
     enterParty (data) {
-      console.log(data)
       if (data.event === 'join') {
         console.log('Joining a room with code: ', data.partyCode)
         this.$socket.emit('join_party', data.partyCode)

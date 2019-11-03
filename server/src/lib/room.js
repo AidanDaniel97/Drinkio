@@ -14,7 +14,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.partyid = partyid
   this.playersReady = false
   this.availableRounds = availableRounds
-  this.playerMin = 1 // SET THIS BACK TO 2 for the REAL GAME
+  this.playerMin = 2 // SET THIS BACK TO 2 for the REAL GAME
   this.roomLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
@@ -22,7 +22,6 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     var newPlayer = new Player.NewPlayer(socketId, this.roomName)
     // Set the socket id so we can select this player by their socket id
     this.players.push(newPlayer)
-    // console.log(this.players)
   }
 
   // Get the player object from the socket
@@ -53,7 +52,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     // All players ready and there is more or equal players than the minumum
     if (this.players.filter(player => player.playerReady).length === this.players.length) {
       if (Object.keys(this.players).length >= this.playerMin) { // all players are ready and meet the min players
-        this.beginGame()
+        this.startGame()
       } else {
         console.log('Players ready, waiting for ' + (this.playerMin - Object.keys(this.players).length) + ' more players to join and be ready')
       }
@@ -73,7 +72,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     this.currentRound.startRound()
   }
 
-  this.beginGame = function beginGame () {
+  this.startGame = function startGame () {
     this.roomLocked = true
     //  Select the first person to go
     var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length)
