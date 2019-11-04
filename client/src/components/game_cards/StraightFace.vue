@@ -5,13 +5,38 @@
 
       <template v-if="isReadingPlayer">
         <h3>{{playerName}}, you are the reader</h3>
+
+        <div v-if="allWriterResponses.length > 0" class="">
+          <template v-if="!chosenWriterResponse">
+            <p>Tap the one that makes you smile</p>
+            <ul>
+              <li v-on:click="revealWriter(response)" v-for="response in allWriterResponses" :key="response.socket">{{response.writerResponse}}</li>
+            </ul>
+          </template>
+          <template v-else>
+            <p>You chose {{chosenWriterResponse.playerName}}'s answer: </p>
+            <h3>{{chosenWriterResponse.writerResponse}}</h3>
+
+            <div v-on:click="endTurn()" v-if="endRoundBtn" class="btn">
+              End Turn
+            </div>
+          </template>
+
+        </div>
       </template>
 
       <template v-else>
          <h3>{{playerName}}, you are a writer</h3>
-         <input v-model="readingResponse" type="text" name="" value="">
-         <div class="" v-on:click="sendReadingResponse">
-           submit
+
+         <div v-if="showWritingInput">
+           <input v-model="writerResponse" type="text" name="" value="">
+           <div class="" v-on:click="sendWritingResponse">
+             submit
+           </div>
+         </div>
+
+         <div v-else>
+            <p>You have sent your message to {{readingPlayer}}</p>
          </div>
       </template>
 
@@ -25,28 +50,63 @@ export default {
   props: ['roundData'],
   data () {
     return {
-      readingResponse: ''
+      writerResponse: '',
+      showWritingInput: true,
+      allWriterResponses: '',
+      chosenWriterResponse: false,
+      endRoundBtn: false
     }
   },
   sockets: {
+    writerResponses: function (responses) {
+      if (this.isReadingPlayer) {
+        this.allWriterResponses = responses
+      }
+    },
+    writingResponseChosen: function (data) {
+      if (data.socket === this.playerSocketID) {
+        console.log('Winner of this round')
+        // COnfetti , congrats message
+      }
+    }
   },
   methods: {
     roundUpdate: function (update) {
       console.log('Got round update: ', update)
     },
-    sendReadingResponse: function () {
+    sendWritingResponse: function () {
+      this.showWritingInput = false
       this.$socket.emit('roundUpdate', {
-        'update': 'readingResponse',
-        'data': this.readingResponse
+        'update': 'writerResponse',
+        'data': this.writerResponse
       })
+    },
+    revealWriter: function (response) {
+      this.chosenWriterResponse = response
+      this.$socket.emit('roundUpdate', {
+        'update': 'writerResponseChosen',
+        'data': this.chosenWriterResponse
+      })
+      setTimeout(function () {
+        this.endRoundBtn = true
+      }.bind(this), 2000)
+    },
+    endTurn: function () {
+      this.$socket.emit('endRound')
     }
   },
   computed: {
     isReadingPlayer: function () {
       return this.roundData.readingPlayer.socket === this.$store.getters.playerSocketID
     },
+    readingPlayer: function () {
+      return this.roundData.readingPlayer.playerName
+    },
     playerName: function () {
       return this.$store.getters.playerName
+    },
+    playerSocketID: function () {
+      return this.$store.getters.playerSocketID
     }
   },
   mounted () {

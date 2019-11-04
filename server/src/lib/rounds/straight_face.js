@@ -19,19 +19,32 @@ module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, ro
     // Room update recieved
     console.log('Recieved an update: ', updateData)
     switch (updateData.update) {
-      case 'readingResponse':
-        this.handleReadingResponse(updateData.data, socket)
+      case 'writerResponse':
+        this.handleWriterResponses(updateData.data, socket)
+        break
+
+      case 'writerResponseChosen':
+        this.room.broadcastUpdate('writingResponseChosen', updateData.data)
+        break
     }
   }
-  this.handleReadingResponse = function handleReadingResponse (readingResponse, socket) {
+  this.handleWriterResponses = function handleWriterResponses (writerResponse, socket) {
     // set this players reading response
-    this.writingPlayers.filter(x => x.socket === socket.id)[0].readingResponse = readingResponse
+    this.writingPlayers.filter(x => x.socket === socket.id)[0].writerResponse = writerResponse
     // check if all responses have been made
-    if(this.checkReadingResponses()){
-      // equals true so now trigger reading reader to see all responses
+    if (this.checkWriterResponsess()) {
+      var responses = []
+      for (var player in this.writingPlayers) {
+        responses.push({
+          playerName: this.writingPlayers[player].playerName,
+          socket: this.writingPlayers[player].socket,
+          writerResponse: this.writingPlayers[player].writerResponse
+        })
+      }
+      this.room.broadcastUpdate('writerResponses', responses)
     }
   }
-  this.checkReadingResponses = function checkReadingResponses () {
-    return this.writingPlayers.filter(x => x.readingResponse !== '' && x.readingResponse !== '').length === this.writingPlayers.length
+  this.checkWriterResponsess = function checkWriterResponsess () {
+    return this.writingPlayers.filter(x => x.writerResponse !== '' && x.writerResponse !== '').length === this.writingPlayers.length
   }
 }

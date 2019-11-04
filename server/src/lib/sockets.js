@@ -107,6 +107,12 @@ module.exports.listen = function (app) {
       roomList[partyid].roomData.onRoundUpdate(updateData, socket)
     })
 
+    socket.on('endRound', function () {
+      var partyid = playerList[socket.id].currentRoomId
+      // Pass the room object the message and the socket it was from
+      roomList[partyid].roomData.onRoundEnd(socket)
+    })
+
     //  A player in a room has said they are ready and passed their name
     socket.on('playerReady', function (playerName) {
       console.log('Recieved ready')

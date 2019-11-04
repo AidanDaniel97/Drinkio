@@ -81,6 +81,10 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length)
     this.startRound(availableRounds[randomRound])
   }
+  // Send update to single socket in room
+  this.sendSingleUpdate = function sendSingleUpdate (update, packet, socket) {
+    this.io.to(socket).emit(update, packet)
+  }
 
   // Send update to room from round
   this.broadcastUpdate = function broadcastUpdate (update, packet) {
@@ -90,5 +94,10 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   // On update recieved
   this.onRoundUpdate = function onRoundUpdate (updateData, socket) {
     this.currentRound.onRoundUpdate(updateData, socket)
+  }
+
+  // On round end, start a new round
+  this.onRoundEnd = function onRoundEnd () {
+    // start a new round
   }
 }
