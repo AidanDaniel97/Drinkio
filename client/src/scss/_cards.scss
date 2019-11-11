@@ -1,10 +1,11 @@
 .round-card{
   width: 80%;
-  height: 100%;
-  background: white;
+  height: 90%;
+  background: $mustard;
   margin: 0 auto;
   border-radius: 15px;
   padding:25px 20px;
-  box-shadow: black 2px 2px;
-  color:black; 
+  // box-shadow: black 2px 2px;
+  color:white;
+  border:10px solid white;
 }

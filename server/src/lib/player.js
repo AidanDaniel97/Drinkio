@@ -6,10 +6,6 @@ module.exports.NewPlayer = function NewPlayer (socket, roomName) {
   this.points = 0
   this.playerReady = false
 
-  this.logtest = function () {
-    console.log('PLAYER LOG TEST')
-  }
-
   this.setPlayerReady = function (state) {
     this.playerRead = state
   }

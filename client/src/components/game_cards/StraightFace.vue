@@ -1,47 +1,56 @@
 <template>
-  <div class="playing-area">
-    <div class="round-card">
-      <h2>Straight Face</h2>
+  <transition name="card">
+    <div class="playing-area">
+        <div class="round-card">
+          <h2>Straight Face</h2>
 
-      <template v-if="isReadingPlayer">
-        <h3>{{playerName}}, you are the reader</h3>
+          <template v-if="isReadingPlayer">
+            <h3>{{playerName}}, you are the reader</h3>
 
-        <div v-if="allWriterResponses.length > 0" class="">
-          <template v-if="!chosenWriterResponse">
-            <p>Tap the one that makes you smile</p>
-            <ul>
-              <li v-on:click="revealWriter(response)" v-for="response in allWriterResponses" :key="response.socket">{{response.writerResponse}}</li>
-            </ul>
-          </template>
-          <template v-else>
-            <p>You chose {{chosenWriterResponse.playerName}}'s answer: </p>
-            <h3>{{chosenWriterResponse.writerResponse}}</h3>
+            <div v-if="allWriterResponses.length > 0" class="">
+              <template v-if="!chosenWriterResponse">
+                <p>Tap the one that makes you smile</p>
+                <ul>
+                  <li v-on:click="revealWriter(response)" v-for="response in allWriterResponses" :key="response.socket">{{response.writerResponse}}</li>
+                </ul>
+              </template>
+              <template v-else>
+                <p>You chose {{chosenWriterResponse.playerName}}'s answer: </p>
+                <h3>{{chosenWriterResponse.writerResponse}}</h3>
 
-            <div v-on:click="endTurn()" v-if="endRoundBtn" class="btn">
-              End Turn
+                <div v-on:click="endTurn()" v-if="endRoundBtn" class="btn">
+                  End Turn
+                </div>
+              </template>
+
             </div>
           </template>
 
+          <template v-else>
+             <h3>{{playerName}}, you are a writer</h3>
+
+             <div v-if="showWritingInput">
+               <input v-model="writerResponse" type="text" name="" value="">
+               <div class="" v-on:click="sendWritingResponse">
+                 submit
+               </div>
+             </div>
+
+             <div v-else-if="!chosenWriterResponse">
+                <p>You have sent your message to {{readingPlayer}}</p>
+             </div>
+
+             <div v-else-if="isWinner">
+               <p>Congrats, you won!</p>
+             </div>
+             <div v-else>
+               <p>Sorry, you haven't won this round</p>
+             </div>
+          </template>
+
         </div>
-      </template>
-
-      <template v-else>
-         <h3>{{playerName}}, you are a writer</h3>
-
-         <div v-if="showWritingInput">
-           <input v-model="writerResponse" type="text" name="" value="">
-           <div class="" v-on:click="sendWritingResponse">
-             submit
-           </div>
-         </div>
-
-         <div v-else>
-            <p>You have sent your message to {{readingPlayer}}</p>
-         </div>
-      </template>
-
-    </div>
-  </div>
+      </div>
+  </transition>
 </template>
 
 <script>
@@ -54,7 +63,8 @@ export default {
       showWritingInput: true,
       allWriterResponses: '',
       chosenWriterResponse: false,
-      endRoundBtn: false
+      endRoundBtn: false,
+      isWinner: false
     }
   },
   sockets: {
@@ -64,8 +74,10 @@ export default {
       }
     },
     writingResponseChosen: function (data) {
+      console.log(data)
+      this.chosenWriterResponse = data
       if (data.socket === this.playerSocketID) {
-        console.log('Winner of this round')
+        this.isWinner = true
         // COnfetti , congrats message
       }
     }

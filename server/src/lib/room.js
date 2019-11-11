@@ -55,9 +55,14 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
         this.startGame()
       } else {
         console.log('Players ready, waiting for ' + (this.playerMin - Object.keys(this.players).length) + ' more players to join and be ready')
+        this.broadcastUpdate('waitingForMorePlayers', {
+          playersLeft: this.playerMin - Object.keys(this.players).length
+        })
       }
     } else {
       console.log('not all players are ready')
+      this.broadcastUpdate('waitingForPlayersReady')
+      // boradcast list of players not ready
     }
   }
 
@@ -69,7 +74,11 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
         break
     }
     // Start the game
-    this.currentRound.startRound()
+    this.broadcastUpdate('choosingRound')
+
+    setTimeout(function () {
+      this.currentRound.startRound()
+    }.bind(this), 2000)
   }
 
   this.startGame = function startGame () {

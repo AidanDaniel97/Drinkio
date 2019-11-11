@@ -1,0 +1,10 @@
+/* Welcome Styles */
+.card-enter {
+    transform: translateY(500px);
+}
+.card-enter-active {
+    transition: all .5s ease;
+}
+.card-leave-active, .card-leave-to {
+    transform: translateY(500px);
+}

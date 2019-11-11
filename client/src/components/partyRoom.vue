@@ -5,7 +5,19 @@
       <p>Join code: {{ $store.getters.partyCode }}</p>
 
       <!-- Could move this into a seperate component -->
-       <component :round-data="roundData" ref="currentGameCard" v-bind:is="currentRoundCard"></component>
+      <component v-if="currentRoundCard" stlye="transition-delay: 1s;" :round-data="roundData" ref="currentGameCard" v-bind:is="currentRoundCard"></component>
+
+      <div v-else-if="waitingForMorePlayers">
+        <p>Waiting for more players... {{waitingForMorePlayers}}</p>
+      </div>
+
+      <div v-else-if="waitingForPlayersReady">
+        <p>Waiting for players to be ready...</p>
+      </div>
+
+      <div v-else-if="choosingRound">
+        <p>Choosing round to play</p>
+      </div>
 
        <modal v-if="showNameModal">
          <h3 slot="header">Enter your name</h3>
@@ -39,16 +51,36 @@ export default {
       showNameModal: true,
       playerName: '',
       currentRoundCard: '',
-      roundData: ''
+      roundData: '',
+      waitingForMorePlayers: false,
+      waitingForPlayersReady: false,
+      choosingRound: false
     }
   },
   sockets: {
     startRound: function (data) {
+      this.choosingRound = false
       this.roundData = data
       this.currentRoundCard = data.round.roundName.split(' ').join('')
     },
     roundUpdate: function (packet) {
       this.$refs.currentGameCard.roomUpdate(packet)
+    },
+    choosingRound: function () { // fired when a new round is being selected
+      this.choosingRound = true
+      this.waitingForMorePlayers = false
+      this.waitingForPlayersReady = false
+      console.log('Fired choosing round')
+    },
+    waitingForMorePlayers: function (packet) {
+      console.log(packet)
+      this.waitingForMorePlayers = packet.playersLeft
+      this.waitingForPlayersReady = false
+    },
+    waitingForPlayersReady: function (packet) {
+      console.log(packet)
+      this.waitingForMorePlayers = false
+      this.waitingForPlayersReady = true
     }
   },
   methods: {
