@@ -18,7 +18,7 @@
                 <p>You chose {{chosenWriterResponse.playerName}}'s answer: </p>
                 <h3>{{chosenWriterResponse.writerResponse}}</h3>
 
-                <div v-on:click="endTurn()" v-if="endRoundBtn" class="btn">
+                <div v-on:click="endRound()" v-if="endRoundBtn" class="btn">
                   End Turn
                 </div>
               </template>
@@ -103,7 +103,7 @@ export default {
         this.endRoundBtn = true
       }.bind(this), 2000)
     },
-    endTurn: function () {
+    endRound: function () {
       this.$socket.emit('endRound')
     }
   },

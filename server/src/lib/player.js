@@ -7,7 +7,7 @@ module.exports.NewPlayer = function NewPlayer (socket, roomName) {
   this.playerReady = false
 
   this.setPlayerReady = function (state) {
-    this.playerRead = state
+    this.playerReady = state
   }
 
   this.setPlayerName = function (playerName) {

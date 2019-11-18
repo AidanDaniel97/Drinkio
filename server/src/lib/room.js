@@ -7,7 +7,9 @@ var straightFace = require('./rounds/straight_face')
 module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.roomName = roomName
   this.players = []
+  this.playerOrder = []
   this.currentPlayer = null
+  this.currentPlayerIndex = null
   this.currentRound = null
   this.io = io
   this.socket = socket
@@ -15,7 +17,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.playersReady = false
   this.availableRounds = availableRounds
   this.playerMin = 2 // SET THIS BACK TO 2 for the REAL GAME
-  this.roomLocked = false
+  this.roomIsLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
   this.addPlayerToRoom = function (socketId) {
@@ -33,40 +35,60 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     this.players = this.players.filter(player => player.socket !== socket)
   }
 
-  /*  Send player ready checks  */
-  this.sendPlayerReadyCheck = function sendPlayerReadyCheck (socket) {
-    console.log('send ready check...')
-    socket.emit('ready_check')
-  }
-
-  this.setPlayerReady = function (socket, playerName) {
+  this.setPlayerReady = function (socket) {
     var thisPlayer = this.getPlayer(socket)
-    thisPlayer.setPlayerName(playerName)
     //  Set the player to ready
-    thisPlayer.playerReady = true
+    thisPlayer.setPlayerReady(true)
     //  Check if all players in the room are ready
     this.checkPlayersReady()
   }
 
+  this.setPlayerName = function (socket, playerName) {
+    var thisPlayer = this.getPlayer(socket)
+    //  Set the player to ready
+    thisPlayer.setPlayerName(playerName)
+  }
+
   this.checkPlayersReady = function checkPlayersReady () {
     // All players ready and there is more or equal players than the minumum
-    if (this.players.filter(player => player.playerReady).length === this.players.length) {
-      if (Object.keys(this.players).length >= this.playerMin) { // all players are ready and meet the min players
-        this.startGame()
+    if (this.players.length >= this.playerMin) {
+      if (this.players.filter(player => player.playerReady).length === this.players.length) { // all players are ready and meet the min players
+        // choose first player
+        this.choosePlayer()
       } else {
-        console.log('Players ready, waiting for ' + (this.playerMin - Object.keys(this.players).length) + ' more players to join and be ready')
-        this.broadcastUpdate('waitingForMorePlayers', {
-          playersLeft: this.playerMin - Object.keys(this.players).length
-        })
+        this.broadcastUpdate('waitingForPlayersReady')
       }
     } else {
-      console.log('not all players are ready')
-      this.broadcastUpdate('waitingForPlayersReady')
-      // boradcast list of players not ready
+      this.broadcastUpdate('waitingForMorePlayers', {
+        playersLeft: this.playerMin - Object.keys(this.players).length
+      })
     }
   }
 
-  this.startRound = function startRound (round) {
+  this.choosePlayer = function choosePlayer () {
+    this.roomIsLocked = true
+
+    if (this.currentPlayerIndex) {
+      var nextPlayer = Object.keys(this.players)[this.currentPlayerIndex + 1]
+      if (nextPlayer) {
+        // this player exists in the player array
+        this.currentPlayer = nextPlayer
+      } else { // reset back to first player
+        this.currentPlayer = Object.keys(this.players)[0]
+        this.currentPlayerIndex = 0
+      }
+      this.currentPlayerIndex += 1
+    } else {
+      this.currentPlayer = Object.keys(this.players)[0]
+      this.currentPlayerIndex = 0
+    }
+
+    // Select a starting game mode
+    var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length)
+    this.startNewRound(availableRounds[randomRound])
+  }
+
+  this.startNewRound = function startNewRound (round) {
     switch (round.id) {
       // new round - current player whos turn it is, list of players,
       case 1: // Straight Face
@@ -81,15 +103,6 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     }.bind(this), 2000)
   }
 
-  this.startGame = function startGame () {
-    this.roomLocked = true
-    //  Select the first person to go
-    var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length)
-    this.currentPlayer = Object.keys(this.players)[randomPlayer]
-    // Select a starting game mode
-    var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length)
-    this.startRound(availableRounds[randomRound])
-  }
   // Send update to single socket in room
   this.sendSingleUpdate = function sendSingleUpdate (update, packet, socket) {
     this.io.to(socket).emit(update, packet)
@@ -107,6 +120,13 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
 
   // On round end, start a new round
   this.onRoundEnd = function onRoundEnd () {
-    // start a new round
+    // alert all players of new round
+    this.broadcastUpdate('roundEnd')
+    //  Select the next person to go
+    var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length)
+    this.currentPlayer = Object.keys(this.players)[randomPlayer]
+    // Select a starting game mode
+    var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length)
+    this.startNewRound(availableRounds[randomRound])
   }
 }

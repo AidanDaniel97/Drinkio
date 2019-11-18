@@ -10,28 +10,45 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    currentRoundCard: '',
+    playersList: [],
     playerSocketID: '',
     playerName: '',
     currentRound: '',
     partyName: '',
-    partyCode: ''
+    partyCode: '',
+    isRooomLocked: false
   },
 
   getters: {
+    currentRoundCard: state => state.currentRoundCard,
+    playersList: state => state.playersList,
     playerSocketID: state => state.playerSocketID,
     playerName: state => state.playerName,
     currentRound: state => state.currentRound,
     partyName: state => state.partyName,
-    partyCode: state => state.partyCode
+    partyCode: state => state.partyCode,
+    isRooomLocked: state => state.isRooomLocked
   },
   mutations: {
+    setCurrentRoundCard (state, card) {
+      state.currentRoundCard = card
+    },
     setPlayerData (state, playerData) {
+      state.playerSocketID = playerData.socketID
+      state.partyName = playerData.partyName
+      state.partyCode = playerData.partyCode
+    },
+    set (state, playerData) {
       state.playerSocketID = playerData.socketID
       state.partyName = playerData.partyName
       state.partyCode = playerData.partyCode
     },
     setCurrentRound (state, currentRound) {
       state.currentRound = currentRound
+    },
+    setRoomLocked (state, value) {
+      state.isRooomLocked = value
     },
     setPlayerUpdate (state, playerData) { // update player
       for (var data in playerData) {

@@ -41,7 +41,7 @@ module.exports.listen = function (app) {
         //* **
         // Add a thing here to check for passwords blah blah blah
         //* ***
-        if (io.sockets.adapter.rooms[partyid].roomData.roomLocked) {
+        if (io.sockets.adapter.rooms[partyid].roomData.roomIsLocked) {
           console.log('this room is locked')
           //  room is locked - game is in progress
           socket.emit('response', {'status': 'error', 'message': error['2']})
@@ -96,8 +96,6 @@ module.exports.listen = function (app) {
         'partyCode': playerList[socket.id].currentRoomId,
         'socketID': socket.id
       })
-      //  on connect, send them a ready check
-      roomData.sendPlayerReadyCheck(socket)
     })
 
     // Send message to room object
@@ -114,14 +112,19 @@ module.exports.listen = function (app) {
       roomList[partyid].roomData.onRoundEnd(socket)
     })
 
-    //  A player in a room has said they are ready and passed their name
-    socket.on('playerReady', function (playerName) {
-      console.log('Recieved ready')
+    //  A player in a room has said they are ready
+    socket.on('playerReady', function () {
       var partyid = playerList[socket.id].currentRoomId
+      roomList[partyid].roomData.setPlayerReady(socket)
+    })
+
+    // A player in a room has sent their name
+    socket.on('playerName', function (playerName) {
       socket.emit('playerUpdate', {
         'playerName': playerName
       })
-      roomList[partyid].roomData.setPlayerReady(socket, playerName)
+      var partyid = playerList[socket.id].currentRoomId
+      roomList[partyid].roomData.setPlayerName(socket, playerName)
     })
   })
   return io
