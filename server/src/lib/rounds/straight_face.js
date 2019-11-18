@@ -32,7 +32,7 @@ module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, ro
     // set this players reading response
     this.writingPlayers.filter(x => x.socket === socket.id)[0].writerResponse = writerResponse
     // check if all responses have been made
-    if (this.checkWriterResponsess()) {
+    if (this.checkWriterResponses()) {
       var responses = []
       for (var player in this.writingPlayers) {
         responses.push({
@@ -44,7 +44,7 @@ module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, ro
       this.room.broadcastUpdate('writerResponses', responses)
     }
   }
-  this.checkWriterResponsess = function checkWriterResponsess () {
-    return this.writingPlayers.filter(x => x.writerResponse !== '' && x.writerResponse !== '').length === this.writingPlayers.length
+  this.checkWriterResponses = function checkWriterResponses () { 
+    return this.writingPlayers.filter(x => x.writerResponse).length === this.writingPlayers.length
   }
 }
