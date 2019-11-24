@@ -1,4 +1,4 @@
-var availableRounds = require('../available_rounds')
+var availableRounds = require('../availableRounds')
 // Straight face - you get given a sentence and someone has to complete it and make the reader laugh. / reader picks the best one.
 module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, room) {
   this.room = room
@@ -45,6 +45,12 @@ module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, ro
     }
   }
   this.checkWriterResponses = function checkWriterResponses () {
-    return this.writingPlayers.filter(x => x.writerResponse).length === this.writingPlayers.length
+    return this.writingPlayers.filter(x => x.writerResponse && x.writerResponse != '').length === this.writingPlayers.length
+  }
+  this.roundEnd = function roundEnd () {
+    // clear writing responses
+    this.writingPlayers.forEach((player) => {
+      player.writerResponse = ''
+    })
   }
 }

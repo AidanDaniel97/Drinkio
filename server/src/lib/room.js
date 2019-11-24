@@ -1,8 +1,10 @@
 /* eslint no-unused-vars: 0 */
+/* eslint no-eval: 0 */
 //  var socketio = require('socket.io')
 var Player = require('./player.js')
-var availableRounds = require('./available_rounds')
-var straightFace = require('./rounds/straight_face')
+var availableRounds = require('./availableRounds')
+var straightFace = require('./rounds/StraightFace')
+var dirtyPint = require('./rounds/DirtyPint')
 
 module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.roomName = roomName
@@ -68,7 +70,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.choosePlayer = function choosePlayer () {
     this.roomIsLocked = true
 
-    if (this.currentPlayerIndex) {
+    if (this.currentPlayerIndex != null) {
       var nextPlayer = Object.keys(this.players)[this.currentPlayerIndex + 1]
       if (nextPlayer) {
         console.log('Next player...', nextPlayer)
@@ -81,7 +83,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
       }
       this.currentPlayerIndex += 1
     } else {
-       console.log('No current player index...', Object.keys(this.players)[0])
+      console.log('No current player index...', Object.keys(this.players)[0])
       this.currentPlayer = Object.keys(this.players)[0]
       this.currentPlayerIndex = 0
     }
@@ -97,6 +99,8 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
       case 1: // Straight Face
         this.currentRound = new straightFace.NewRound(this.currentPlayer, this.players, this)
         break
+      case 2: // Dirty Pint
+        this.currentRound = new dirtyPint.NewRound(this.currentPlayer, this.players, this)
     }
     // Start the game
     this.broadcastUpdate('choosingRound')
@@ -123,11 +127,12 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
 
   // On round end, start a new round
   this.onRoundEnd = function onRoundEnd () {
+    // Send end round to game, to reset any values
+    this.currentRound.roundEnd()
     // alert all players of new round
     this.broadcastUpdate('roundEnd')
     //  Select the next person to go
-    var randomPlayer = Math.floor(Math.random() * Object.keys(this.players).length)
-    this.currentPlayer = Object.keys(this.players)[randomPlayer]
+    this.choosePlayer()
     // Select a starting game mode
     var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length)
     this.startNewRound(availableRounds[randomRound])
