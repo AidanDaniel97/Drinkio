@@ -44,7 +44,7 @@ module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, ro
       this.room.broadcastUpdate('writerResponses', responses)
     }
   }
-  this.checkWriterResponses = function checkWriterResponses () { 
+  this.checkWriterResponses = function checkWriterResponses () {
     return this.writingPlayers.filter(x => x.writerResponse).length === this.writingPlayers.length
   }
 }

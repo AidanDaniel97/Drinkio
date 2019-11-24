@@ -25,7 +25,7 @@ module.exports.listen = function (app) {
       //  if the player is in a room, remove them from the room
       // console.log('disconnect: ', socket.id, socket)
       if (playerList[socket.id] && playerList[socket.id].currentRoomId) {
-        roomList[playerList[socket.id].currentRoomId].roomData.playerDisconnect(socket)
+        roomList[playerList[socket.id].currentRoomId].roomData.removePlayerFromRoom(socket)
       }
       // Remove them from the main player list
       delete playerList[socket.id]

@@ -26,13 +26,13 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     this.players.push(newPlayer)
   }
 
+  this.removePlayerFromRoom = function removePlayerFromRoom (socket) {
+    this.players = this.players.filter(player => player.socket !== socket)
+  }
+
   // Get the player object from the socket
   this.getPlayer = function getPlayer (socket) {
     return this.players.filter(player => player.socket === socket.id)[0]
-  }
-
-  this.playerDisconnect = function playerDisconnect (socket) {
-    this.players = this.players.filter(player => player.socket !== socket)
   }
 
   this.setPlayerReady = function (socket) {
@@ -71,14 +71,17 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     if (this.currentPlayerIndex) {
       var nextPlayer = Object.keys(this.players)[this.currentPlayerIndex + 1]
       if (nextPlayer) {
+        console.log('Next player...', nextPlayer)
         // this player exists in the player array
         this.currentPlayer = nextPlayer
       } else { // reset back to first player
+        console.log('Reset...', nextPlayer)
         this.currentPlayer = Object.keys(this.players)[0]
         this.currentPlayerIndex = 0
       }
       this.currentPlayerIndex += 1
     } else {
+       console.log('No current player index...', Object.keys(this.players)[0])
       this.currentPlayer = Object.keys(this.players)[0]
       this.currentPlayerIndex = 0
     }
