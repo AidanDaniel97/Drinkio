@@ -45,7 +45,7 @@ module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, ro
     }
   }
   this.checkWriterResponses = function checkWriterResponses () {
-    return this.writingPlayers.filter(x => x.writerResponse && x.writerResponse != '').length === this.writingPlayers.length
+    return this.writingPlayers.filter(x => x.writerResponse && x.writerResponse !== '').length === this.writingPlayers.length
   }
   this.roundEnd = function roundEnd () {
     // clear writing responses

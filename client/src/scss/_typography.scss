@@ -8,14 +8,11 @@ $font-bold: 600;
 
 h1,
 .h1 {
-	font-size: 2.8125rem!important;
+	font-size: 2.8em;
 	font-family: $font-family-signika;
 	font-weight: $font-bold!important;
 	&.menu-title{
-		font-size: 5rem;
-	}
-	@include media-breakpoint-down(sm) {
-		font-size: 5rem!important;
+		font-size: 9em;
 	}
 }
 

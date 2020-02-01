@@ -4,8 +4,8 @@
         <h1 class="menu-title mar-b-80">Drinkio</h1>
         <div class="row">
           <div class="col-xs-12">
-            <button v-on:click="showCreateModal = true" type="button" class="btn home-btn menu-buttons mar-b-30" data-toggle="modal" data-target="#roomModal">Create Party</button>
-            <button v-on:click="showJoinModal = true" type="button" class="btn home-btn menu-buttons mar-b-30" data-toggle="modal" data-target="#roomModal" >Join Party</button>
+            <button v-on:click="showCreateModal == true" type="button" class="btn home-btn menu-buttons mar-b-30" data-toggle="modal" data-target="#roomModal">Create Party</button>
+            <button v-on:click="showJoinModal == true" type="button" class="btn home-btn menu-buttons mar-b-30" data-toggle="modal" data-target="#roomModal" >Join Party</button>
           </div>
         </div>
       </div>
