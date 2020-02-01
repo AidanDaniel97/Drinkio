@@ -106,6 +106,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     this.broadcastUpdate('choosingRound')
 
     setTimeout(function () {
+      console.log('Starting new round, ', round.id)
       this.currentRound.startRound()
     }.bind(this), 2000)
   }

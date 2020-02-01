@@ -47,12 +47,14 @@
 //  Components
 import Modal from './modal'
 import StraightFace from './gamecards/StraightFace'
+import DirtyPint from './gamecards/DirtyPint'
 
 export default {
   name: 'partyRoom',
   components: {
     'modal': Modal,
-    'StraightFace': StraightFace
+    'StraightFace': StraightFace,
+    'DirtyPint': DirtyPint
   },
   data () {
     return {
