@@ -4,6 +4,7 @@
 @import "colours";
 @import "typography";
 @import "buttons";
+@import "input";
 @import "global";
 @import "spacers";
 @import "loader";
@@ -26,17 +27,13 @@ body {
   text-align: center;
   color: white;
   height:100%;
-  background-color: #77B6EA;
+  background-color: $lightBlue;
 }
 
 #app{
   height:100%;
 }
-
-input{
-  color:$lightGrey;
-}
-
+ 
 
 
 * { margin: 0; padding: 0; box-sizing: border-box; }

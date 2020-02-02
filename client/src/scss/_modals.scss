@@ -17,26 +17,39 @@
 }
 
 .modal-container {
-  width: 300px;
+  width: 50%;
+  border:3px solid black;
   margin: 0px auto;
   padding: 20px 30px;
-  background-color: $lightGrey;
+  color:black;
+  background-color: white;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
+
+  @media #{$small-and-down} {
+    width:90%;
+  }
 
 	.btn{
 		width:100%;
 	}
 }
 
-.modal-header h2 {
-  margin-top: 0;
-  color: $white;
+.modal-header{
+  border-bottom:0px;
+  h2 {
+    margin-top: 0;
+  }
 }
 
 .modal-body {
   margin: 20px 0;
+
+  input{
+    display: block;
+    width: 100%;
+  }
 }
 
 .modal-default-button {

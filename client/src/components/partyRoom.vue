@@ -2,19 +2,26 @@
     <div class="mar-t-80 party-room">
 
       <template v-if="!$store.getters.isRooomLocked">
-        <h2>Welcome to</h2>
         <h1>{{ $store.getters.partyName }}</h1>
-        <p>Join code: {{ $store.getters.partyCode }}</p>
+        <h3>Join code: {{ $store.getters.partyCode }}</h3>
 
-        <h2 @click="setPlayerReady">Ready clck here</h2>
+        <div v-if="!readyClicked" class="ready-button-holder">
+          <button class="ready-btn btn" @click="setPlayerReady">
+            Ready?
+          </button>
+        </div>
 
         <div v-if="waitingForMorePlayers">
-          <p>Waiting for more players... {{waitingForMorePlayers}}</p>
+          <h3>
+            <span v-if="waitingForMorePlayers == 1">Waiting for 1 more player</span>
+            <span v-else>Waiting for {{waitingForMorePlayers}} more players</span>
+          </h3>
         </div>
 
         <div v-else-if="waitingForPlayersReady">
-          <p>Waiting for players to be ready...</p>
+          <h3>Waiting for players to be ready...</h3>
         </div>
+
       </template>
 
       <template v-else>
@@ -34,8 +41,8 @@
            <input v-model="playerName" type="text" placeholder="Name" name="" value="">
          </p>
          <div slot="footer">
-           <button class="modal-default-button" v-on:click="setPlayerName">
-             Continue
+           <button class="btn" v-on:click="setPlayerName">
+             Join
            </button>
          </div>
        </modal>
@@ -65,7 +72,8 @@ export default {
       roundData: '',
       waitingForMorePlayers: false,
       waitingForPlayersReady: false,
-      choosingRound: false
+      choosingRound: false,
+      readyClicked: false
     }
   },
   sockets: {
@@ -106,6 +114,7 @@ export default {
       this.$socket.emit('playerName', this.playerName)
     },
     setPlayerReady () {
+      this.readyClicked = true
       this.$socket.emit('playerReady')
     }
   }

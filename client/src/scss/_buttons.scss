@@ -1,7 +1,15 @@
-button {
-	border: none;
+.ready-button-holder{
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	box-sizing: border-box;
+	top: 0;
+	left: 0;
+	width: 100%;
 }
-
 
 .btn {
 	&.home-btn{
@@ -9,14 +17,34 @@ button {
 		font-size: 2rem;
 	}
 
+	font-weight: bold;
   margin: 0 auto;
   width: 80%;
   padding: 13px;
-	background-color: #ad3939;
+	background-color: white;
 	text-transform: uppercase;
-	border:solid 0.18182em #000;
-	border-bottom: solid 0.3em #000;
-	color: white;
+	border: solid 3px $black;
+	color: black;
+	position: relative;
+
+	&:before{
+	content: '';
+	position: absolute;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	border-bottom:2px solid $black;
+	}
+
+	&:hover{
+	  color: black;
+		transform: translateY(2px);
+		&:before{
+			border-bottom:0px solid $black;
+		}
+	}
+
 	// Standard Buttons
 	&.lg {
 		font-size: 1.25rem;
