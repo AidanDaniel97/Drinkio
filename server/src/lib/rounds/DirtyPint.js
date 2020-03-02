@@ -9,7 +9,8 @@ module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, ro
     // update clients with new round
     this.room.broadcastUpdate('startRound', {
       round: this.round,
-      playerList: this.playerList
+      playerList: this.playerList,
+      currentPlayer: this.currentPlayer
     })
   }
   this.onRoundUpdate = function onRoundUpdate (updateData, socket) {

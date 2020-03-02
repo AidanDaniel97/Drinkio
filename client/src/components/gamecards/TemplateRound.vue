@@ -3,10 +3,8 @@
   <transition name="card">
     <div class="playing-area">
         <div class="round-card">
-          <h2>XXXX</h2>
-
+          <h2>XXXX</h2> 
           <p>xxxxxx</p>
-
         </div>
       </div>
   </transition>

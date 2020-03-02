@@ -1,0 +1,12 @@
+[
+  {
+    "roundName": "Straight Face",
+    "id":1,
+    "minPlayer": 2
+  },
+  {
+    "roundName": "Dirty Pint",
+    "id":2,
+    "minPlayer": 2
+  }
+]

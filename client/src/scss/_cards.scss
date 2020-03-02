@@ -5,7 +5,19 @@
   margin: 0 auto;
   border-radius: 15px;
   padding:25px 20px;
-  // box-shadow: black 2px 2px;
   color:white;
-  border:10px solid white;
+  // animation: riseIn .5s forwards;
+  border: 2px solid #fff;
+}
+
+
+@keyframes riseIn {
+  0%{
+    transform:translateY(3px);
+    border-bottom: 0px solid #fff;
+  }
+  100%{
+    transform:translateY(0);
+    border-bottom:7px solid #fff;
+  }
 }

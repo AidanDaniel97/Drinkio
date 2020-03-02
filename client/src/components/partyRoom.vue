@@ -38,7 +38,7 @@
        <modal v-if="showNameModal">
          <h3 slot="header">Enter your name</h3>
          <p slot="body">
-           <input v-model="playerName" type="text" placeholder="Name" name="" value="">
+           <input v-model="playerName" v-on:keyup.enter="setPlayerName"  type="text" placeholder="Name" name="" value="">
          </p>
          <div slot="footer">
            <button class="btn" v-on:click="setPlayerName">

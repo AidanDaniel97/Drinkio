@@ -17,7 +17,7 @@
           <h3>
             Enter your room name:
           </h3>
-          <input v-model="partyName" type="text" placeholder="Room Name" name="" value="">
+          <input v-model="partyName" v-on:keyup.enter="enterParty('create')" type="text" placeholder="Room Name" name="" value="">
         </div>
         <div slot="footer">
           <button class="btn" v-on:click="enterParty('create')">
@@ -33,7 +33,7 @@
           <h3>
             Enter the room 4-digit room code:
           </h3>
-          <input class="colour-black" v-model="partyCode" type="text" placeholder="Room Code" name="" value="">
+          <input class="colour-black" v-on:keyup.enter="enterParty('join')" v-model="partyCode" type="text" placeholder="Room Code" name="" value="">
         </div>
         <div slot="footer">
           <button class="btn" v-on:click="enterParty('join')">

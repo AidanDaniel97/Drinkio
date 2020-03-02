@@ -4,8 +4,11 @@
     <div class="playing-area">
         <div class="round-card">
           <h2>Dirty Pint</h2>
+          <h3>{{roundData.currentPlayer.playerName}} add to the pint.</h3>
 
-          <p>{{roundData}}</p>
+          <div v-on:click="endRound()" v-if="endRoundBtn && currentPlayerTurn" class="btn">
+            End Turn
+          </div>
 
         </div>
       </div>
@@ -37,10 +40,15 @@ export default {
     },
     playerSocketID: function () {
       return this.$store.getters.playerSocketID
+    },
+    currentPlayerTurn: function () {
+      return this.playerSocketID === this.roundData.currentPlayer.socket
     }
   },
   mounted () {
-    console.log('Mounted')
+    setTimeout(function () {
+      this.endRoundBtn = true
+    }.bind(this), 2000)
   }
 }
 </script>
