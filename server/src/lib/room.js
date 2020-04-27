@@ -6,8 +6,8 @@ var availableRounds = require('./availableRounds')
 var straightFace = require('./rounds/StraightFace')
 var dirtyPint = require('./rounds/DirtyPint')
 
-module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
-  this.roomName = roomName
+module.exports.NewRoom = function NewRoom (partyName, gameMode, io, partyid, socket) {
+  this.partyName = partyName
   this.players = []
   this.playerOrder = []
   this.currentPlayer = null
@@ -17,13 +17,13 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
   this.socket = socket
   this.partyid = partyid
   this.playersReady = false
-  this.availableRounds = availableRounds
-  this.playerMin = 2 // SET THIS BACK TO 2 for the REAL GAME
+  this.availableRounds = availableRounds[gameMode]
+  this.playerMin = 1 // SET THIS BACK TO 2 for the REAL GAME
   this.roomIsLocked = false
 
   // true,debate_room_id,debate_name,debate_side)
   this.addPlayerToRoom = function (socketId) {
-    var newPlayer = new Player.NewPlayer(socketId, this.roomName)
+    var newPlayer = new Player.NewPlayer(socketId, this.partyName)
     // Set the socket id so we can select this player by their socket id
     this.players.push(newPlayer)
   }
@@ -89,8 +89,9 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     }
 
     // Select a starting game mode
-    var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length)
-    this.startNewRound(availableRounds[randomRound])
+    console.log(this.availableRounds)
+    var randomRound = Math.floor(Math.random() * Object.keys(this.availableRounds).length)
+    this.startNewRound(this.availableRounds[randomRound])
   }
 
   this.startNewRound = function startNewRound (round) {
@@ -135,7 +136,7 @@ module.exports.NewRoom = function NewRoom (roomName, io, partyid, socket) {
     //  Select the next person to go
     this.choosePlayer()
     // Select a starting game mode
-    var randomRound = Math.floor(Math.random() * Object.keys(availableRounds).length)
-    this.startNewRound(availableRounds[randomRound])
+    var randomRound = Math.floor(Math.random() * Object.keys(this.availableRounds).length)
+    this.startNewRound(this.availableRounds[randomRound])
   }
 }

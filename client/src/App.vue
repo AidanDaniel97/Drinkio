@@ -41,7 +41,7 @@ export default {
         this.$socket.emit('join_party', data.partyCode)
       } else {
         console.log('Creating a room called: ', data.partyName)
-        this.$socket.emit('create_party', data.partyName)
+        this.$socket.emit('create_party', [data.partyName, data.gameMode])
       }
     }
   }

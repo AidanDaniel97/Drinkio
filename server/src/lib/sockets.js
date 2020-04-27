@@ -71,7 +71,9 @@ module.exports.listen = function (app) {
       }
     })
 
-    socket.on('create_party', function (partyName) {
+    socket.on('create_party', function (partyData) {
+      var partyName = partyData[0]
+      var gameMode = partyData[1]
       // Generate unique room code
       var partyid = codegen.generateCode(5, 'aA')
       // Join the room using a unique code
@@ -84,7 +86,7 @@ module.exports.listen = function (app) {
       // if(!roomList[partyid]){
       //* **********************
       // Set room up with a data object - pass the room name (party id) and socket
-      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, io, partyid, socket)
+      io.sockets.adapter.rooms[partyid].roomData = new Rooms.NewRoom(partyName, gameMode, io, partyid, socket)
       var roomData = io.sockets.adapter.rooms[partyid].roomData
       roomData.addPlayerToRoom(socket.id)
       // set the player's current room

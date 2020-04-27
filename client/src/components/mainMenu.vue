@@ -18,6 +18,11 @@
             Enter your room name:
           </h3>
           <input v-model="partyName" v-on:keyup.enter="enterParty('create')" type="text" placeholder="Room Name" name="" value="">
+          <br>
+          <h3>
+            Select Game Type
+          </h3>
+          <gameModes @setGameMode="setGameMode" />
         </div>
         <div slot="footer">
           <button class="btn" v-on:click="enterParty('create')">
@@ -48,18 +53,21 @@
 <script>
 //  Components
 import Modal from './modal'
+import gameModes from './gameModes'
 
 export default {
   name: 'mainMenu',
   components: {
-    'modal': Modal
+    'modal': Modal,
+    'gameModes': gameModes
   },
   data () {
     return {
       showJoinModal: false,
       showCreateModal: false,
       partyCode: '',
-      partyName: ''
+      partyName: '',
+      gameMode: ''
     }
   },
   sockets: {
@@ -72,8 +80,11 @@ export default {
       if (event === 'join') {
         this.$emit('enterParty', {'event': 'join', 'partyCode': this.partyCode})
       } else {
-        this.$emit('enterParty', {'event': 'create', 'partyName': this.partyName})
+        this.$emit('enterParty', {'event': 'create', 'partyName': this.partyName, 'gameMode': this.gameMode})
       }
+    },
+    setGameMode (mode) {
+      this.gameMode = mode
     }
   }
 }

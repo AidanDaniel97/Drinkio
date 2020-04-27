@@ -10,6 +10,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    currentRoom: '',
     currentRoundCard: '',
     playersList: [],
     playerSocketID: '',
@@ -21,6 +22,7 @@ export default new Vuex.Store({
   },
 
   getters: {
+    currentRoom: state => state.currentRoom,
     currentRoundCard: state => state.currentRoundCard,
     playersList: state => state.playersList,
     playerSocketID: state => state.playerSocketID,
@@ -33,6 +35,9 @@ export default new Vuex.Store({
   mutations: {
     setCurrentRoundCard (state, card) {
       state.currentRoundCard = card
+    },
+    setCurrentRoom (state, room) {
+      state.currentRoom = room
     },
     setPlayerData (state, playerData) {
       state.playerSocketID = playerData.socketID

@@ -1,8 +1,7 @@
-var availableRounds = require('../availableRounds')
 // Straight face - you get given a sentence and someone has to complete it and make the reader laugh. / reader picks the best one.
 module.exports.NewRound = function NewRound (currentPlayerSocket, playerList, room) {
   this.room = room
-  this.round = availableRounds.filter(x => x.id === 1)[0]
+  this.round = room.availableRounds.filter(x => x.id === 1)[0]
   this.readingPlayer = playerList[currentPlayerSocket]
   this.writingPlayers = playerList.filter(x => x.socket !== this.readingPlayer.socket)
   this.playerList = playerList

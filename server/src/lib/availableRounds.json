@@ -1,12 +1,16 @@
-[
-  {
-    "roundName": "Straight Face",
-    "id":1,
-    "minPlayer": 2
-  },
-  {
-    "roundName": "Dirty Pint",
-    "id":2,
-    "minPlayer": 2
-  }
-]
+{
+  "lockdown": [
+    {
+      "roundName": "Straight Face",
+      "id":1,
+      "minPlayer": 2
+    }
+  ],
+  "normal": [
+    {
+      "roundName": "Dirty Pint",
+      "id":2,
+      "minPlayer": 2
+    }
+  ]
+}
